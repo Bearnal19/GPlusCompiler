@@ -28,13 +28,13 @@ parser code {:
     String valorActualTipo;
     String fil,col;
     ArrayList<Error1> ManejadorDeErrores;
-    int fl;
     boolean esDAssig=false;
+    int fl;
 
-    public Asintactico(java_cup.runtime.Scanner s,ArrayList<Error1> m,int fdl) {
+    public Asintactico(java_cup.runtime.Scanner s,ArrayList<Error1> m,int tfl) {
         super(s); 
-        ManejadorDeErrores = m;
-        fl = fdl;
+        ManejadorDeErrores =m; 
+        fl = tfl;
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
@@ -116,7 +116,7 @@ BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2
   parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left curly brace '{' expected after reserved word 'MAIN' is missing. Line: "+(eleft+1)+", column: "+(eright-1)+"."));
 :}
 | error:e DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2 {:
-   parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: reserved word 'DECLARE' and left curly brace '{' are missing. Line: "+(eleft+1)+", column: "+(eright+8)));
+   parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: reserved word 'DECLARE' and left curly brace '{' are missing. Line: "+(eleft+1)+", column: "+(eright+8)+"."));
 :}
 | DECLARE:e DECLARE_BODY MAIN:d  MAIN_BODY CURLY_BR2 {:
  parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left curly brace '{' expected after reserved word 'DECLARE', is missing. Line: "+(eleft+1)+", column: "+(eright+8)+"."));
@@ -127,7 +127,7 @@ BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2
  parser.ManejadorDeErrores.add(new Error1("ES",dleft-1,dright,"Syntax Error: expected reserved word 'MAIN', is missing. Line: "+(dleft+1)+", column: "+(dright)+"."));
 :}
 | error CURLY_BR1:e DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY {:
- parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: expected value 'DECLARE' Missing. Line: "+(eleft+1)+", column: "+(eright+8)));
+ parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: expected value 'DECLARE' Missing. Line: "+(eleft+1)+", column: "+(eright+8)+"."));
 :}
 |DECLARE:d DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2{:
  parser.ManejadorDeErrores.add(new Error1("ES",dleft-1,dright,"Syntax Error: left curly brace '{' expected after reserved word 'DECLARE', is missing. Line: "+(dleft+1)+", column: "+(dright+8)+"."));
@@ -136,7 +136,7 @@ BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2
  parser.ManejadorDeErrores.add(new Error1("ES",cleft-1,cright,"Syntax Error: reserved word 'MAIN' expected after 'DECLARE block', is missing. Line: "+(cleft+1)+", column: "+(cright)+"."));
 :}
 |DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY:e {:
- parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: "  + fl + "."));
+ parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: " + fl + "."));
 :}
 |DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2 error:e {:
  parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: value not expected after 'MAIN block'. Line: "+(eleft+1)+", column: "+(eright)+"."));
@@ -202,7 +202,7 @@ DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY
 | DATA_TYPE error:e SEMICOLON_SIGN DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: assignment statement expected. Line: "+(eleft+1)+", column: "+(eright+1)+"."));:}
 | DATA_TYPE ASSIG error:e DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: semicolon ';' is missing. Line: "+(eleft+1)+", column: "+(eright+1)+"."));:}
 | error:e SEMICOLON_SIGN DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  EXPRESSION expected before semicolon ';', is missing. Line: "+(eleft+1)+", column: "+(eright+1)+"."));:}
-| ASSIG error:e DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  semicolon ';' expected ath the end of the sentence is missing. Line: "+(eleft+1)));:}
+| ASSIG error:e DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  semicolon ';' expected ath the end of the sentence is missing. Line: "+(eleft+1)+", column: "+(eright+1)+"."));:}
 
 ;
 
@@ -636,6 +636,7 @@ NODE_STR ::= NODE ID:i ASSIG_OP NEW NODE PARENTH1 ID:f COMMA_SIGN STRINGVAL:j CO
 
 
 :}
+|ID:e ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: NODE type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |error:e ID ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'NODE' word expected  before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |NODE error:e ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Identifier expected  before assignment. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |NODE ID error:e NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Assignment operator '=' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -670,7 +671,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
     }
 :}
 |ARRAYSTRING ID ASSIG_OP NEW BRACKET1 ARRAYVAL:e  SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Braket ']' expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|error:e ID ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ARRAYSTRING type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|ID:e ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ARRAYSTRING type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING error:e ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING ID error:e NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: ASSIG '=' missing . Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING ID ASSIG_OP error:e BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: 'NEW' word expected after assignment operator. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -734,7 +735,8 @@ boolean insert = FCompiler.ts.insertar(i+"");
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
         System.out.println("No inserto "+ duplicado);
     }
-:}
+:}                                                                                                                                                                                                      
+| ID:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURES type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |FEATURES error:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  ID expected after 'FEATURES' word. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID error:e NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Assignment operator ('=') Missing . Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID ASSIG_OP error:e FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  'NEW' word expected after assignment operator. Line: "+(eleft+1)+", column: "+eright+"."));:}  
@@ -796,7 +798,7 @@ RESULT=e1+","+e2+","+e3+","+e4+","+e5+","+e6+","+e7+","+e8+","+e9+","+e10+","+e1
 
 /*-----------------GRAMATICAS MAIN, UY QUE MIEDO -------------------*/
 MAIN_BODY ::= SENTEN |SENTEN MAIN_BODY 
-  |SENTEN error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing MAIN BODY block, is missing.. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+//  |SENTEN error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing MAIN BODY block, is missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ; 
 
 
@@ -902,6 +904,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
         System.out.println("No inserto "+ duplicado);
     }
 :}
+| ID:e ASSIG_OP NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: GROUP type expected before identifier. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GROUP error:e ASSIG_OP NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GROUP ID error:e NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ASSIG('=') missing . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GROUP ID ASSIG_OP error:e GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'NEW' expected before missing . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
