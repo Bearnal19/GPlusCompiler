@@ -136,12 +136,12 @@ BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2
  parser.ManejadorDeErrores.add(new Error1("ES",cleft-1,cright,"Syntax Error: reserved word 'MAIN' expected after 'DECLARE block', is missing. Line: "+(cleft+1)+", column: "+(cright)+"."));
 :}
 |DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY:e {:
- parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: " + fl + "."));
+ parser.ManejadorDeErrores.add(new Error1("ES",fl,0,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: " + fl + "."));
 :}
 |DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2 error:e {:
  parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: value not expected after 'MAIN block'. Line: "+(eleft+1)+", column: "+(eright)+"."));
 :}
-| error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax error: malformed program structure, conflict starts in line: "+(eleft+1)+", column: "+(eright)+"."));:}
+| error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax error: malformed program structure. Line: "+(eleft+1)+", column: "+(eright)+"."));:}
 | error:e DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: value not expected before 'DECLARE block'. Line: "+(eleft+1)+", column: "+(eright)+"."));:}
 | error:e CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: expected value reserved word 'DECLARE' is missing. Line: "+(eleft+1)+", column: "+"."));:}
 | DECLARE error:e CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: value not expected after reserved word 'DECLARE'. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -196,7 +196,7 @@ DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY
     parser.esDAssig = false;
 :} 
 
-|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed 'declare body' structure, conflict starts in line: "+(eleft+1)+"."));:}
+|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed 'declare body' structure. Line: "+(eleft+1)+"."));:}
 | error:e SEMICOLON_SIGN DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: EXPRESSION expected before semicolon ';', is missing. Line: "+(eleft+1)+", column: "+(eright+1)+"."));:}
 | DEC error:e DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  semicolon ';' expected at the end of the sentence is missing. Line: "+(eleft+1)+"."));:}
 | DATA_TYPE error:e SEMICOLON_SIGN DECLARE_BODY{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: assignment statement expected. Line: "+(eleft+1)+", column: "+(eright+1)+"."));:}
@@ -214,8 +214,6 @@ DECLARE_BODY2 ::= DEC SEMICOLON_SIGN
     if(parser.esDAssig){
         String error = "Semantic error: Identifier: "+"\""+parser.tipoActual+"\" not declared. Line: "+(parser.fil)+", column: "+parser.col+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",Integer.parseInt(parser.fil),Integer.parseInt(parser.col),error));
-    } else{
-        System.out.println("NO SE QUE HACES AQUI XD");
     }
     parser.esDAssig = false;
 :}
@@ -360,7 +358,7 @@ EXP ::=  ID:i {:
         //SINTETIZAR TIPO
         RESULT = i;
 :}
-|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed expression structure, conflict starts in line: "+(eleft+1)+", column: "+eright+"."));:}
+|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed expression structure. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
 STRINGVAL ::= STRINGVALAUX:s1 {:
@@ -678,7 +676,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
 |ARRAYSTRING ID ASSIG_OP NEW error:e ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Left Braket '[' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING ID ASSIG_OP NEW BRACKET1 error:e BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: String value/identifier expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING ID ASSIG_OP NEW BRACKET1 ARRAYVAL error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Braket ']'  missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|ARRAYSTRING ID ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing  . Line: "+(eleft+1)+", column: "+eright+"."));:}
+|ARRAYSTRING ID ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
 ARRAYVAL ::= STRINGVAL:i {:
@@ -738,7 +736,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
 :}                                                                                                                                                                                                      
 | ID:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURES type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |FEATURES error:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  ID expected after 'FEATURES' word. Line: "+(eleft+1)+", column: "+eright+"."));:}  
-|FEATURES ID error:e NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Assignment operator ('=') Missing . Line: "+(eleft+1)+", column: "+eright+"."));:}  
+|FEATURES ID error:e NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Assignment operator ('=') Missing. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID ASSIG_OP error:e FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  'NEW' word expected after assignment operator. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID ASSIG_OP NEW error:e PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  'FEATURES' word expected after identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID ASSIG_OP NEW FEATURES error:e FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Left Parenthesis '(' expected. Line: "+(eleft+1)+", column: "+eright+"."));:}  
@@ -974,9 +972,9 @@ boolean search = FCompiler.ts.buscarLex(i+"");
     }
 :}
 | READSTRING error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left Parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| READSTRING PARENTH1 error:e PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| READSTRING PARENTH1 error:e PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | READSTRING PARENTH1 ID error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-|READSTRING PARENTH1 ID PARENTH2 error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+|READSTRING PARENTH1 ID PARENTH2 error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 
 ;
 
@@ -989,7 +987,7 @@ PLN ::= PRINTLN PARENTH1 STRINGVAL PARENTH2 SEMICOLON_SIGN
 | PRINTLN error:e STRINGVAL PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | PRINTLN PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: STRINGVAL type expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | PRINTLN PARENTH1 STRINGVAL error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PRINTLN PARENTH1 STRINGVAL PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| PRINTLN PARENTH1 STRINGVAL PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
 
 GNGROUP ::= GENERATEGROUP PARENTH1 ID:i PARENTH2 SEMICOLON_SIGN
@@ -1011,9 +1009,9 @@ boolean search = FCompiler.ts.buscarLex(i+"");
     }
 :}
 | GENERATEGROUP error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GENERATEGROUP PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GENERATEGROUP PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GENERATEGROUP PARENTH1 ID error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GENERATEGROUP PARENTH1 ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GENERATEGROUP PARENTH1 ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
 
 PGPH ::= PRINTGRAPH PARENTH1 ID:i PARENTH2 SEMICOLON_SIGN
@@ -1035,7 +1033,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 | PRINTGRAPH error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | PRINTGRAPH PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | PRINTGRAPH PARENTH1 ID error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PRINTGRAPH PARENTH1 ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' is missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| PRINTGRAPH PARENTH1 ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' is missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
 
 
@@ -1076,9 +1074,9 @@ boolean search2 = FCompiler.ts.buscarLex(j+"");
     }
 :}
 | GETSIMILITUDE error:e ID COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 error:e COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 error:e COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETSIMILITUDE PARENTH1 ID error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: COMMA_SIGN ',' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID COMMA_SIGN error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
@@ -1103,7 +1101,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
     }
 :} 
 | GETFEATURES error:e ID POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Left Parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETFEATURES PARENTH1 error:e POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETFEATURES PARENTH1 error:e POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES PARENTH1 ID:c error:e FEATURE_WORD {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  dot '.' expected after identifier "+c+", is missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES PARENTH1 ID POINT_SIGN error:e  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 
@@ -1174,7 +1172,7 @@ ABSTRACTION:i PARENTH2 SEMICOLON_SIGN{:RESULT=i;:}
 | SELFSUFFICIENCY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | SENSITIVITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | SOCIABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing.Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| STABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | STRESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing). Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | SURVEILLANCE PARENTH2 error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;

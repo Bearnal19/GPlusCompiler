@@ -3271,7 +3271,7 @@ void print(String msj)
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
 		
- parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: " + fl + "."));
+ parser.ManejadorDeErrores.add(new Error1("ES",fl,0,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: " + fl + "."));
 
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("BEGIN",0, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-5)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
@@ -3298,7 +3298,7 @@ void print(String msj)
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax error: malformed program structure, conflict starts in line: "+(eleft+1)+", column: "+(eright)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax error: malformed program structure. Line: "+(eleft+1)+", column: "+(eright)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("BEGIN",0, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -3505,7 +3505,7 @@ void print(String msj)
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed 'declare body' structure, conflict starts in line: "+(eleft+1)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed 'declare body' structure. Line: "+(eleft+1)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("DECLARE_BODY",1, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -3611,8 +3611,6 @@ void print(String msj)
     if(parser.esDAssig){
         String error = "Semantic error: Identifier: "+"\""+parser.tipoActual+"\" not declared. Line: "+(parser.fil)+", column: "+parser.col+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",Integer.parseInt(parser.fil),Integer.parseInt(parser.col),error));
-    } else{
-        System.out.println("NO SE QUE HACES AQUI XD");
     }
     parser.esDAssig = false;
 
@@ -4008,7 +4006,7 @@ void print(String msj)
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed expression structure, conflict starts in line: "+(eleft+1)+", column: "+eright+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed expression structure. Line: "+(eleft+1)+", column: "+eright+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("EXP",6, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -5113,7 +5111,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing  . Line: "+(eleft+1)+", column: "+eright+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+eright+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("ARRAYSTRING_STR",15, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-7)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -5285,7 +5283,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-6)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-6)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-6)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Assignment operator ('=') Missing . Line: "+(eleft+1)+", column: "+eright+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Assignment operator ('=') Missing. Line: "+(eleft+1)+", column: "+eright+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("FEATURES_STR",16, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-8)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6485,7 +6483,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("READS",30, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6509,7 +6507,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-1)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-1)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("READS",30, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-5)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6593,7 +6591,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("PLN",31, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6645,7 +6643,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("GNGROUP",32, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6669,7 +6667,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("GNGROUP",32, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6743,7 +6741,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' is missing  . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' is missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("PGPH",33, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6831,7 +6829,7 @@ boolean search2 = FCompiler.ts.buscarLex(j+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("GSIMILITUDE",34, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-6)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6855,7 +6853,7 @@ boolean search2 = FCompiler.ts.buscarLex(j+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("GSIMILITUDE",34, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-6)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -6936,7 +6934,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("GFEATURES",35, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;
@@ -7752,7 +7750,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 		int eleft = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
-		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing.Line: "+(eleft+1)+", column: "+(eright+2)+"."));
+		parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("FEATURE_WORD",36, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
           return CUP$Asintactico$result;

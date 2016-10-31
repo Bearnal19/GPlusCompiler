@@ -12,10 +12,8 @@ package analizador;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,12 +22,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import static java.nio.channels.DatagramChannel.open;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
@@ -1121,6 +1120,12 @@ public class FCompiler extends javax.swing.JFrame {
                     jTextPane_Output.setForeground(new Color(102,123,57));
                     jTextPane_Output.setText("BUILD SUCCESSFUL");
                 }else{
+                    Collections.sort(manejadorErrores,new Comparator<Error1>() { //Ordenamiento a partir de numero de linea
+                        @Override
+                        public int compare(Error1 p1, Error1 p2) {
+                            return new Integer(p1.getLinea()).compareTo(new Integer(p2.getLinea()));
+                        }
+                    });                 
                     String merrores=mostrarManejadorErrores();
                     jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
                 }
@@ -1199,7 +1204,7 @@ public class FCompiler extends javax.swing.JFrame {
     public String mostrarManejadorErrores(){
         String errores="";
         
-        for(int i =manejadorErrores.size()-1;i>=0;i--)
+        for(int i =0;i<=manejadorErrores.size()-1;i++)
         {
             String error =(manejadorErrores.get(i).toString()+"\n");
             if(!error.equals("\n")){
