@@ -358,7 +358,7 @@ return symbol(sym.ASSIG_OP,yytext());}
 TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ADD_OP,yytext());}
 
-"*"  {
+"-"  {
 TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SUBS_OP,yytext());}
 
