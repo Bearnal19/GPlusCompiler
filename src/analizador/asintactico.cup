@@ -28,9 +28,14 @@ parser code {:
     String valorActualTipo;
     String fil,col;
     ArrayList<Error1> ManejadorDeErrores;
+    int fl;
     boolean esDAssig=false;
 
-    public Asintactico(java_cup.runtime.Scanner s,ArrayList<Error1> m) {super(s); ManejadorDeErrores =m; }
+    public Asintactico(java_cup.runtime.Scanner s,ArrayList<Error1> m,int fdl) {
+        super(s); 
+        ManejadorDeErrores = m;
+        fl = fdl;
+    }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
         report_error("No se encontró ;",s);
@@ -131,7 +136,7 @@ BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2
  parser.ManejadorDeErrores.add(new Error1("ES",cleft-1,cright,"Syntax Error: reserved word 'MAIN' expected after 'DECLARE block', is missing. Line: "+(cleft+1)+", column: "+(cright)+"."));
 :}
 |DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY:e {:
- parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing."));
+ parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: "  + fl + "."));
 :}
 |DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2 error:e {:
  parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: value not expected after 'MAIN block'. Line: "+(eleft+1)+", column: "+(eright)+"."));

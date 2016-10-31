@@ -2996,9 +2996,14 @@ public class Asintactico extends java_cup.runtime.lr_parser {
     String valorActualTipo;
     String fil,col;
     ArrayList<Error1> ManejadorDeErrores;
+    int fl;
     boolean esDAssig=false;
 
-    public Asintactico(java_cup.runtime.Scanner s,ArrayList<Error1> m) {super(s); ManejadorDeErrores =m; }
+    public Asintactico(java_cup.runtime.Scanner s,ArrayList<Error1> m,int fdl) {
+        super(s); 
+        ManejadorDeErrores = m;
+        fl = fdl;
+    }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
         report_error("No se encontró ;",s);
@@ -3222,7 +3227,7 @@ void print(String msj)
 		int eright = ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Asintactico$stack.peek()).value;
 		
- parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing."));
+ parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right curly brace '}' expected for closing 'MAIN block', is missing. Line: "  + fl + "."));
 
               CUP$Asintactico$result = parser.getSymbolFactory().newSymbol("BEGIN",0, ((java_cup.runtime.Symbol)CUP$Asintactico$stack.elementAt(CUP$Asintactico$top-5)), ((java_cup.runtime.Symbol)CUP$Asintactico$stack.peek()), RESULT);
             }
