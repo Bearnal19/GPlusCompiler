@@ -1184,7 +1184,7 @@ public class FCompiler extends javax.swing.JFrame {
         Asintactico parser;
         ArrayList<Error1> m = new ArrayList<Error1>();
         //m.add(new errorsin("Prueba",1,2,"añsdhfoiasdhf"));
-        parser=new Asintactico(flex,m);
+        parser=new Asintactico(flex,m,jTextPane_Code.getDocument().getDefaultRootElement().getElementCount());
         try {
             parser.parse();
         } catch (Exception ex) {
