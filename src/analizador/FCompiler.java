@@ -1108,7 +1108,8 @@ public class FCompiler extends javax.swing.JFrame {
     public void analizar() throws IOException{
         jTextPane_Output.setText("");
         jTextPane_Output.setForeground(new Color(204,0,51));
-        
+        Generador.contadorTemp=0;
+        Generador.contadorEtiq=0;
         tablaSimbolos.clear();
         manejadorErrores.clear();
         codigointermedio = "";
