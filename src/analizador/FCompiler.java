@@ -12,8 +12,10 @@ package analizador;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,6 +24,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,9 +56,11 @@ public class FCompiler extends javax.swing.JFrame {
     static TSimbolos ts = new TSimbolos();
     ManejadorErrores manejadorE;
     private String textoCopiado="";
+    static String codigointermedio;
     ArrayList<String> palabras;
     ArrayList<Color> colores;
     ArrayList<Error1> manejadorErrores;
+    ArrayList<Error1> manejadorErrores_intermedio;
     ArrayList<entradaTS>tablaSimbolos;
     
     /**
@@ -67,10 +72,10 @@ public class FCompiler extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         //Se invoca al método generarLex que genera la clase AnalizadorLexico desde el archivo alexico.flex
         generarLex();
-        
+        codigointermedio="";
         tablaSimbolos = new ArrayList<entradaTS>();
         manejadorErrores = new ArrayList<Error1>();
-        
+        manejadorErrores_intermedio = new ArrayList<Error1>();
         setIconImage(new ImageIcon(getClass().getResource("../imagenes/brillabrillacomodiamantenelcielo.png")).getImage());
         manejadorE=new ManejadorErrores();
         
@@ -1106,6 +1111,8 @@ public class FCompiler extends javax.swing.JFrame {
         
         tablaSimbolos.clear();
         manejadorErrores.clear();
+        codigointermedio = "";
+        manejadorErrores_intermedio.clear();
         ts.ts=new ArrayList<TSDatos>();
         
         int c=0;
@@ -1117,24 +1124,29 @@ public class FCompiler extends javax.swing.JFrame {
                 sintactico();
                 System.out.println("Tamaño manejador errores: "+manejadorErrores.size());
                 if(manejadorErrores.size()==0){
-                    jTextPane_Output.setForeground(new Color(102,123,57));
-                    jTextPane_Output.setText("BUILD SUCCESSFUL");
+                    
+                    intermedio();
+                    System.out.println("estoy en el cup del intermedio");
+                    if(manejadorErrores_intermedio.size()==0){
+                       jTextPane_Output.setForeground(new Color(102,123,57));
+                       jTextPane_Output.setText("BUILD SUCCESSFUL");
+                       jTextPane_Output.setText(jTextPane_Output.getText()+"\n"+codigointermedio);
+                    }else{
+                    String merrores=mostrarManejadorErrores2();
+                    jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
+                }
+                    
                 }else{
                     Collections.sort(manejadorErrores,new Comparator<Error1>() { //Ordenamiento a partir de numero de linea
                         @Override
                         public int compare(Error1 p1, Error1 p2) {
                             return new Integer(p1.getLinea()).compareTo(new Integer(p2.getLinea()));
                         }
-                    });                 
+                    });
                     String merrores=mostrarManejadorErrores();
                     jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
                 }
                 
-                /*if (mostrarManejadorErrores().equals("")) {
-                    jTextPane_Output.setForeground(new Color(102,123,57));
-                    jTextPane_Output.setText("BUILD SUCCESSFUL");
-                    jTextPane_Output.setForeground(new Color(204,0,51));
-                }*/
             } catch (Exception ex) {
                 Logger.getLogger(FCompiler.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1201,6 +1213,24 @@ public class FCompiler extends javax.swing.JFrame {
         }
     }
     
+    public void intermedio(){
+        AnalizadorLexico flex=new AnalizadorLexico(new StringReader(code));
+        
+        Intermedio parser;
+        ArrayList<Error1> m = new ArrayList<Error1>();
+        //m.add(new errorsin("Prueba",1,2,"añsdhfoiasdhf"));
+        parser=new Intermedio(flex,m,jTextPane_Code.getDocument().getDefaultRootElement().getElementCount());
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            Logger.getLogger(FCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(!parser.ManejadorDeErrores.isEmpty()){
+            System.out.println(parser.ManejadorDeErrores.get(0).toString());
+        this.manejadorErrores.addAll(parser.ManejadorDeErrores);
+        }
+    }
+    
     public String mostrarManejadorErrores(){
         String errores="";
         
@@ -1212,13 +1242,18 @@ public class FCompiler extends javax.swing.JFrame {
             }
         }
 
-        /*for(int i =0;i<manejadorErrores.size();i++)
+        return errores;
+    }
+    public String mostrarManejadorErrores2(){
+        String errores="";
+        
+        for(int i =0;i<=manejadorErrores_intermedio.size()-1;i++)
         {
-            String error =(manejadorErrores.get(i).toString()+"\n");
+            String error =(manejadorErrores_intermedio.get(i).toString()+"\n");
             if(!error.equals("\n")){
                 errores+=error;
             }
-        }*/
+        }
         return errores;
     }
     

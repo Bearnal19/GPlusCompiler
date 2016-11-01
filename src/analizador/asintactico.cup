@@ -841,7 +841,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
 
                    /*AQUI YA LE VAMOS AGREGAR LOS VALORES A GROUP*/
 
-                   /*¿que ocupo? - un metodo que me de el atributo features. , un atributo que guarde max o min, valor*/
+                   /*Â¿que ocupo? - un metodo que me de el atributo features. , un atributo que guarde max o min, valor*/
                     FCompiler.ts.actualizar(i+"", "valor", c);
                     FCompiler.ts.actualizar(i+"", "maxomin", j);
                     FCompiler.ts.actualizar(i+"", "setfeatures", f);
