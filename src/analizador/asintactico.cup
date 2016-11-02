@@ -14,7 +14,8 @@ import java.util.*;
 /***********ACTION CODE***********/
 action code{:
 void print(String msj)
-   {System.out.println(msj);}
+   {System.out.println(msj);
+    }
 :}
 /* Codigo del parser, se copia integramente a la clase final. Agregamos el manejo de errores. */
 
@@ -512,22 +513,23 @@ F ::= BOOLEANVAL:i {:RESULT = i;:}
 
 
 
-EXPNUM ::=  T:e1 SUBS_OP EXPNUM :e2 {:
-        System.out.println("e1: "+e1+"e2: "+e2);
+EXPNUM ::= T:i {:
+        RESULT = (int) i;
+        System.out.print("Entro a la primera gramatica");
+:} 
+| EXPNUM:e1 SUBS_OP  T:e2 {:
         RESULT = (int) e1 - (int) e2;
+        System.out.print("exp1 "+e1 +"- exp2 " + e2 + " = " + RESULT);  
     :}
-| T :e1 ADD_OP EXPNUM :e2 {:
-        System.out.println("e1: "+e1+"e2: "+e2);
+
+| EXPNUM :e1 ADD_OP  T:e2 {:
         RESULT = (int) e1+ (int) e2;
     :} 
-
-|T:i {:
-        RESULT = (int) i;
-:} |error:e ADD_OP EXPNUM {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|T error:e EXPNUM {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Sum/Substraction operator expected. Line: "+(eleft+1)+", column: "+eright+"."));:} 
-|T ADD_OP error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|error:e SUBS_OP EXPNUM {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|T SUBS_OP error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|error:e ADD_OP T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+".")); :}
+|EXPNUM error:e T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Addition/Substraction operator expected. Line: "+(eleft+1)+", column: "+eright+"."));:} 
+|EXPNUM ADD_OP error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|error:e SUBS_OP T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|EXPNUM SUBS_OP error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
@@ -596,20 +598,16 @@ NODE_STR ::= NODE ID:i ASSIG_OP NEW NODE PARENTH1 ID:f COMMA_SIGN STRINGVAL:j CO
 {:
   boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
-        System.out.println(" Voy a insertar "+i );
         FCompiler.ts.actualizar(i+"","tipo","NODE");
         FCompiler.ts.actualizar(i+"", "linea", (ileft+1)+"");
         FCompiler.ts.actualizar(i+"", "columna", iright+"");
-        System.out.print(">>> "+i+"\n");
         FCompiler.ts.pushVar("variable",i+"",(ileft+1)+"",(iright+1)+"");
        
          
 /*COMPROBANDO QUE EL SEGUNDO ID:f sea de tipo FEATURES*/
         boolean search = FCompiler.ts.buscarLex(f+"");
         if(search){
-        System.out.println(" Voy a buscar el tipo "+f );
         String Tipo=FCompiler.ts.RegresarTipo(f+"");
-        System.out.println(Tipo);
         if(Tipo.equalsIgnoreCase("FEATURES")){
 
 
@@ -655,13 +653,10 @@ NODE_STR ::= NODE ID:i ASSIG_OP NEW NODE PARENTH1 ID:f COMMA_SIGN STRINGVAL:j CO
 ARRAYSTRING_STR ::=  ARRAYSTRING ID:i ASSIG_OP NEW BRACKET1 ARRAYVAL:j BRACKET2 SEMICOLON_SIGN {:
 boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
-        System.out.println(" Voy a insertar "+i );
         FCompiler.ts.actualizar(i+"","tipo","ARRAYSTRING");
         FCompiler.ts.actualizar(i+"", "linea", (ileft+1)+"");
         FCompiler.ts.actualizar(i+"", "columna", iright+"");
-        System.out.print(">>> "+i+"\n");
         FCompiler.ts.pushVar("variable",i+"",(ileft+1)+"",(iright+1)+"");
-         System.out.println(" Voy a insertar "+j );
          FCompiler.ts.actualizar(i+"","valor",j);
          RESULT=i;
 
@@ -697,11 +692,9 @@ RESULT= i+","+j;
 FEATURES_STR ::= FEATURES ID:i ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL:e PARENTH2 SEMICOLON_SIGN{:
 boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
-        System.out.println(" Voy a insertar "+i );
         FCompiler.ts.actualizar(i+"","tipo","FEATURES");
         FCompiler.ts.actualizar(i+"", "linea", (ileft+1)+"");
         FCompiler.ts.actualizar(i+"", "columna", iright+"");
-        System.out.print(">>> "+i+"\n");
         FCompiler.ts.pushVar("variable",i+"",(ileft+1)+"",(iright+1)+"");
         /*voy a introducir el valor del features val*/
         String valores[]=e.toString().split(",");
@@ -733,7 +726,6 @@ boolean insert = FCompiler.ts.insertar(i+"");
     }else{
         String duplicado = "Semantic error: Identifier:"+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
-        System.out.println("No inserto "+ duplicado);
     }
 :}                                                                                                                                                                                                      
 | ID:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURES type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -815,28 +807,22 @@ GROUP_STR ::= GROUP ID:i ASSIG_OP NEW GROUP PARENTH1 ID:f COMMA_SIGN MAXMIN:j CO
 {:
 boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
-        System.out.println(" Voy a insertar "+i );
         FCompiler.ts.actualizar(i+"","tipo","GROUP");
         FCompiler.ts.actualizar(i+"", "linea", (ileft+1)+"");
         FCompiler.ts.actualizar(i+"", "columna", iright+"");
-        System.out.print(">>> "+i+"\n");
         FCompiler.ts.pushVar("variable",i+"",(ileft+1)+"",(iright+1)+"");
         /*COMPROBAR QUE EL PRIMER ID SEA FEATURES Y EL SEGUNDO ARRAYSTRING*/
         
         /*COMPROBANDO QUE EL SEGUNDO ID:f sea de tipo FEATURES*/
         boolean search = FCompiler.ts.buscarLex(f+"");
     if(search){
-        System.out.println(" Voy a buscar el tipo "+f );
         String Tipo=FCompiler.ts.RegresarTipo(f+"");
-        System.out.println(Tipo);
         if(Tipo.equalsIgnoreCase("FEATURES")){
           //TSDatos identificador=FCompiler.ts.buscar(f+"");
           /*COMPROBANDO QUE EL SEGUNDO ID:c sea de tipo ARRAYSTRING*/
         boolean search2 = FCompiler.ts.buscarLex(c+"");
     if(search2){
-        System.out.println(" Voy a buscar el tipo "+c );
         String Tipo2=FCompiler.ts.RegresarTipo(c+"");
-        System.out.println(Tipo2);
         if(Tipo2.equalsIgnoreCase("ARRAYSTRING")){
           //TSDatos identificador=FCompiler.ts.buscar(c+"");
 
@@ -854,46 +840,36 @@ boolean insert = FCompiler.ts.insertar(i+"");
         }else{
         String TipoError = "Semantic error: Identifier:"+"\""+c+"\" is not ArrayString type. Line:  "+(cleft+1)+", column: "+cright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(cleft+1),cright,TipoError));
-        System.out.println("no se declaro "+ TipoError);
         }
         }else{
         String NoExiste = "Semantic error: Identifier:"+"\""+c+"\" has not been declared. Line: "+(cleft+1)+", column: "+cright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(cleft+1),cright,NoExiste));
-        System.out.println("no se declaro "+ NoExiste);
          }
           
         }else{
-        System.out.println("TIPO QUE RECIBIO MAL "+ Tipo);
         String TipoError = "Semantic error: Identifier:"+"\""+f+"\" is not Features type. Line: "+(fleft+1)+", column: "+fright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(fleft+1),fright,TipoError));
-        System.out.println("no se declaro "+ TipoError);
         }
     }else{
         String NoExiste = "Semantic error:  Identifier:"+"\""+c+"\" is not type ArrayString. Line: "+(fleft+1)+", column: "+fright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(fleft+1),fright,NoExiste));
-        System.out.println("no se declaro "+ NoExiste);
     }
     
     /*COMPROBANDO QUE EL SEGUNDO ID:c sea de tipo ARRAYSTRING*/
         boolean search2 = FCompiler.ts.buscarLex(c+"");
     if(search2){
-        System.out.println(" Voy a buscar el tipo "+c );
         String Tipo2=FCompiler.ts.RegresarTipo(c+"");
-        System.out.println(Tipo2);
         if(Tipo2.equalsIgnoreCase("ARRAYSTRING")){
           //TSDatos identificador=FCompiler.ts.buscar(c+"");
           
           
         }else{
-        System.out.println("TIPO QUE RECIBIO MAL "+ Tipo2);
         String TipoError = "Semantic error:  Identifier:"+"\""+c+"\" is not type ArrayString. Line: "+(cleft+1)+", column: "+cright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(cleft+1),cright,TipoError));
-        System.out.println("no se declaro "+ TipoError);
         }
     }else{
         String NoExiste = "Semantic error: Identifier: "+"\""+c+"\" not declared. Line: "+(cleft+1)+", column: "+cright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(cleft+1),cright,NoExiste));
-        System.out.println("no se declaro "+ NoExiste);
     }
 
     }else{
@@ -901,7 +877,6 @@ boolean insert = FCompiler.ts.insertar(i+"");
         
         String duplicado = "Semantic error: Identifier: "+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
-        System.out.println("No inserto "+ duplicado);
     }
 :}
 | ID:e ASSIG_OP NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: GROUP type expected before identifier. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
@@ -1091,7 +1066,6 @@ boolean search = FCompiler.ts.buscarLex(i+"");
           //TSDatos identificador=FCompiler.ts.buscar(i+"");
           /*AQUI SE DEBE CREAR UNA TABLA DE DATOS DE NODE Y DE FEATURE_WORD DEBE RECUPERAR SU VALOR ENTERO*/
             int valor= FCompiler.ts.RegresarValorFeatures(i+"",j+"");
-            System.out.println("el valor de feature es: "+valor+"");
             RESULT=valor;
         }else{
         String TipoError = "Semantic error: Identifier: "+"\""+i+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(ileft+1)+", columnn: "+iright+".";
