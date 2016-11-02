@@ -488,7 +488,10 @@ COND ::= F:e1 OP_LOG:o COND:e2 {:
         parser.ManejadorDeErrores.add(new Error1("ES",oleft-1,oright,"Syntax Error: Logic operator expected. Line: "+(oleft+1)+", column: "+oright+"."));
     }
 
-:} | EXPNUM:e1 OP_REL:o EXPNUM:e2{:
+:}  | F:f{:RESULT=f;:};
+
+F ::= BOOLEANVAL:i {:RESULT = i;:} 
+| EXPNUM:e1 OP_REL:o EXPNUM:e2{:
     if(o.equals("EQUAL_OP")){
         RESULT = Integer.parseInt(e1.toString()) == Integer.parseInt(e2.toString());
         System.out.println("Primera expresion "+e1+". Segunda expresion "+e2+". Result "+ RESULT);
@@ -503,9 +506,8 @@ COND ::= F:e1 OP_LOG:o COND:e2 {:
     }else if(o.equals("GEATER_EQUAL_OP")){
         RESULT = Integer.parseInt(e1.toString()) >= Integer.parseInt(e2.toString());
     }
-    :} | F:f{:RESULT=f;:};
-
-F ::= BOOLEANVAL:i {:RESULT = i;:} | PARENTH1 COND:i PARENTH2{:RESULT=i; :}
+    :}
+| PARENTH1 COND:i PARENTH2{:RESULT=i; :}
 ;
 
 
