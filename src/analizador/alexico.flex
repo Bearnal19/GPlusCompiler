@@ -70,9 +70,10 @@ ID={LET}({ALPHANUMERIC})*
 IGNORE=[ \t\r\n]
 BLANK=[ ]
 COMENTARIOS= "/*"~"*/"
-COMENT="//"({ALPHANUMERIC}|{BLANK})+|"--"
-COMENTS="//"([¨*+"[""]"{}'´·!-&¡Ññ\¿?"<"">"¡#$%&/()=°¬"|"\^]|[0-9]|Ä|Ë|Ï|Ö|Ü|[A-Z|a-z]|á|é|í|ó|ú|ý|Á|É|Í|Ó|Ú|Ý|{BLANK})+
-COMENTSS="/"([¨*+"[""]"{}'´·!-&¡Ññ\¿?"<"">"¡#$%&/()=°¬"|"\^]|[0-9]|Ä|Ë|Ï|Ö|Ü|[A-Z|a-z]|á|é|í|ó|ú|ý|Á|É|Í|Ó|Ú|Ý|{BLANK})+
+COMENTARIO= ("//"+|"///"+)+(({ALPHANUMERIC}|{BLANK})+|([¨*+"[""]"{}'´·!-&¡Ññ\¿?"<"">"¡#$%&/()=°¬;.,"-""|"\^]|[0-9]|Ä|Ë|Ï|Ö|Ü|[A-Z|a-z]|á|é|í|ó|ú|ý|Á|É|Í|Ó|Ú|Ý|{BLANK})+)*
+//COMENT="//"({ALPHANUMERIC}|{BLANK})+|"//"
+//COMENTS="//"([¨*+"[""]"{}'´·!-&¡Ññ\¿?"<"">"¡#$%&/()=°¬"|"\^]|[0-9]|Ä|Ë|Ï|Ö|Ü|[A-Z|a-z]|á|é|í|ó|ú|ý|Á|É|Í|Ó|Ú|Ý|{BLANK})+
+//COMENTSS="/"([¨*+"[""]"{}'´·!-&¡Ññ\¿?"<"">"¡#$%&/()=°¬"|"\^]|[0-9]|Ä|Ë|Ï|Ö|Ü|[A-Z|a-z]|á|é|í|ó|ú|ý|Á|É|Í|Ó|Ú|Ý|{BLANK})+
 INVALIDO=[([¨*+"[""]"{}'´·!-&¡Ññ\¿?"<"">"¡#$%&/()=°¬"|"\^]|[0-9]|Ä|Ë|Ï|Ö|Ü|[A-Z]|Á|É|Í|Ó|Ú|Ý|)]+
 STRING=("\"" ({LET}|{NUM}|{BLANK})* "\"")
 NOACEPTADOS=[·!-&¡0-9Ññ/\“\”áéíóúúÁÉÍÓÚÝÄËÏÖÜ]
@@ -368,18 +369,10 @@ return symbol(sym.POINT_SIGN,yytext());}
 TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.COMMA_SIGN,yytext());}
 
-{COMENTARIOS} {
-    System.out.println("Comentarios");
-/*IGNORE*/
-}
+{COMENTARIOS} {/*IGNORE*/}
 
-{COMENTS} {
-    System.out.println("Coments");/*IGNORE*/}
-
-{COMENTSS} {System.out.println("Comentss");/*IGNORE*/}
-
-{COMENT} {System.out.println("Coment");/*IGNORE*/}  
-
+{COMENTARIO} {
+   System.out.println("Comentario de una linea"); /*IGNORE*/}
 
 (({LET}* {NOACEPTADOS}+ {LET}* {NOACEPTADOS}*)+)  {
 ManejadorDeErrores.add(new Error1("Lexico",yyline,yycolumn,yytext()));
