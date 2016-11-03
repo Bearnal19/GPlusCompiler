@@ -32,8 +32,9 @@ public class Generador {
     public static final int OR=17;
     public static final int READSTRING=18;
     public static final int READFEATVAL=19;
-    
-    
+   public static final int GETFEATURES=20;
+    public static final int PRINTGRAPH=21;
+    public static final int GNGROUP=22;
     
     
     public static int contadorTemp = 0;
@@ -43,7 +44,7 @@ public class Generador {
     public static String gc(int operacion, String arg1, String arg2, String resultado) {
         switch (operacion) {
             case ADD_OP:
-                return "  		" + resultado + " = " + arg1 + " + " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " + " + arg2 + "\n";
             case SUBS_OPP:
                 return "   	   " + resultado + " = " + arg1 + " - " + arg2 + "\n";
             case ASSIG_OP:
@@ -58,30 +59,36 @@ public class Generador {
             case LABEL:
                 return resultado + ":\n";
             case PRINTLN:
-                return "   	   print " + resultado + "\n";
+                return "   	   PRINTLN " + resultado + "\n";
+            case PRINTGRAPH:
+                return "   	   PRINTGRAPH " + resultado + "\n";
+            case GNGROUP:
+                return "   	   GENERATEGROUP " + resultado + "\n";
+            case GETFEATURES:
+                return "   	   GETFEATURES " + resultado + "\n";
             case GREATER_OP:
                 return "   	   " + resultado + " = " + arg1 + " > " + arg2 + "\n";
             case LESS_OP:
-                return "   		" + resultado + " = " + arg1 + " < " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " < " + arg2 + "\n";
             case LESS_EQUAL_OP:
-                return "   		" + resultado + " = " + arg1 + " <= " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " <= " + arg2 + "\n";
             case GREATER_EQUAL_OP:
                 return "   	   " + resultado + " = " + arg1 + " >= " + arg2 + "\n";
             case EQUAL_OP:
-                return "   		" + resultado + " = " + arg1 + " == " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " == " + arg2 + "\n";
             case NOT_EQUAL_OP:
-                return "   		" + resultado + " = " + arg1 + " != " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " != " + arg2 + "\n";
             case NOT:
-                return "   		" + resultado + " = " + "NOT" + arg1 + arg2 + "\n";
+                return "   	   " + resultado + " = " + "NOT" + arg1 + arg2 + "\n";
             case AND:
-                return "                  	" + resultado + " = " + arg1 + " && " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " && " + arg2 + "\n";
             case OR:
-                return "   		" + resultado + " = " + arg1 + " %% " + arg2 + "\n";
+                return "   	   " + resultado + " = " + arg1 + " %% " + arg2 + "\n";
             case READSTRING:
-                return "       " + resultado + " = Input \n";
+                return "   	   " + resultado + " = InputString \n";
             case READFEATVAL:
-                return "       " + resultado + " = Input \n";
-
+                return "   	   " + resultado + " = InputInt \n";
+                    
             default:
                 return "Error en la generación de código\n";
         }

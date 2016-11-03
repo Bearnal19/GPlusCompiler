@@ -146,6 +146,21 @@ ArrayList<TSDatos> ts;
         }
         return null;
     }
+    public int regresarSumaFeatures(String lexema){
+        for(int i=0;i<ts.size();i++){
+            
+            if(ts.get(i).lexema.equals(lexema)){
+                return ts.get(i).features.Abstraction+ts.get(i).features.Affability+ts.get(i).features.Anxiety
+                      +ts.get(i).features.CareToStandards+ts.get(i).features.Dare+ts.get(i).features.Dominance
+                      +ts.get(i).features.Hardness+ts.get(i).features.Independence+ts.get(i).features.Liveliness
+                      +ts.get(i).features.OpennessToChange+ts.get(i).features.Perfectionism+ts.get(i).features.Privacy
+                      +ts.get(i).features.Reasoning+ts.get(i).features.SelfControl+ts.get(i).features.SelfSufficiency
+                      +ts.get(i).features.Sensitivity+ts.get(i).features.Sociability+ts.get(i).features.Stability
+                      +ts.get(i).features.Surveillance+ts.get(i).features.Tension+ts.get(i).features.apprehension;
+            }
+        }
+        return -1;
+    }
     public int RegresarValorFeatures(String lexema,String feature){
         int valor=0;
         for(int i=0;i<ts.size();i++){
