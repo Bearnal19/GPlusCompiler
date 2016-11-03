@@ -1152,8 +1152,8 @@ public class FCompiler extends javax.swing.JFrame {
                     codigointermedio="No intermediate code generated";
                     ci.codigo(codigointermedio);
                     ci.posicionInicial();
-                    jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
-                }
+                       jTextPane_Output.setText(jTextPane_Output.getText()+"\n"+codigointermedio);
+                    }
                     
                 }else{
                     Collections.sort(manejadorErrores,new Comparator<Error1>() { //Ordenamiento a partir de numero de linea
