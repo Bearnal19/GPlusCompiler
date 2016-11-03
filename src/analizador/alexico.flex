@@ -16,7 +16,6 @@ import java_cup.runtime.*;
 %public
 //Cuando se alcanza el fin del archivo de entrada
 %eof{
-    //System.out.println("Fin del archivo de codigo");
 %eof}
 
 %ignorecase
@@ -333,7 +332,6 @@ TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext()));
 return symbol(sym.AND_OP,yytext());}
 
 ("%%")  {
-System.out.println("OR_OP "+yytext());
 TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.OR_OP,yytext());}
 
@@ -372,7 +370,7 @@ return symbol(sym.COMMA_SIGN,yytext());}
 {COMENTARIOS} {/*IGNORE*/}
 
 {COMENTARIO} {
-   System.out.println("Comentario de una linea"); /*IGNORE*/}
+  /*IGNORE*/}
 
 (({LET}* {NOACEPTADOS}+ {LET}* {NOACEPTADOS}*)+)  {
 ManejadorDeErrores.add(new Error1("Lexico",yyline,yycolumn,yytext()));

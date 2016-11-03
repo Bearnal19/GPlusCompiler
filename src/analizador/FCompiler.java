@@ -677,7 +677,6 @@ public class FCompiler extends javax.swing.JFrame {
                 nuevo();
                 break;
             case 2:
-                System.out.print(undo.size());
                 if(undo.size()>1){
                     
                     redo.add(undo.get(undo.size()-1));
@@ -807,7 +806,7 @@ public class FCompiler extends javax.swing.JFrame {
                 String s = jTextPane_Code.getText();
                 textoCopiado = s.substring( inicio , fin );
                 break;
-            case 3: System.out.println(jTextPane_Code.getCaretPosition()    );
+            case 3: 
                 break;
             case 4:
                 color1 = new Color(41,85,72);
@@ -920,7 +919,6 @@ public class FCompiler extends javax.swing.JFrame {
              String codigo=jTextPane_Code.getText();
              //Convertimos el codigo a mayúscula para que esté uniforme
              codigo=codigo;
-             System.out.println(codigo);
             
             //Se guarda el codigo en el archivo code.txt
             File archivo = new File(nombreArchivo);
@@ -951,7 +949,6 @@ public class FCompiler extends javax.swing.JFrame {
             }
             catch(IOException io)
             {
-                  System.out.println("Error opening file");
                   return;
             }
  
@@ -1123,11 +1120,9 @@ public class FCompiler extends javax.swing.JFrame {
             try {
                 analizarCodigo();
                 sintactico();
-                System.out.println("Tamaño manejador errores: "+manejadorErrores.size());
                 if(manejadorErrores.size()==0){
                     
                     intermedio();
-                    System.out.println("estoy en el cup del intermedio");
                     if(manejadorErrores_intermedio.size()==0){
                        jTextPane_Output.setForeground(new Color(102,123,57));
                        jTextPane_Output.setText("BUILD SUCCESSFUL");
@@ -1172,7 +1167,6 @@ public class FCompiler extends javax.swing.JFrame {
                     c++;
                     cad=cad+"TKN #"+c+" < "+token.getToken()+" , "+token.getType()+" >\n";
                 }
-                //System.out.println(token);
             }
             
         } while (token != null);
@@ -1267,10 +1261,8 @@ public class FCompiler extends javax.swing.JFrame {
             if(cadena.indexOf("/*", posicion) <= cadena.indexOf("*/", posicion+2)){
                 
                 palabras.add(cadena.substring(cadena.indexOf("/*",posicion), cadena.indexOf("*/",posicion+2)+2));
-                System.out.println(cadena.substring(cadena.indexOf("/*",posicion), cadena.indexOf("*/",posicion+2)+2));
             }else {
                 palabras.add(cadena.substring(cadena.indexOf("/*",posicion)));
-                System.out.println(cadena.substring(cadena.indexOf("/*",posicion)));
             }
             colores.add(new Color(104,113,94));
             posicion = cadena.indexOf("/*", posicion+1);
