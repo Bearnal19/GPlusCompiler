@@ -1126,16 +1126,16 @@ public class FCompiler extends javax.swing.JFrame {
                 System.out.println("Tamaño manejador errores: "+manejadorErrores.size());
                 if(manejadorErrores.size()==0){
                     
-                    //intermedio();
-                    //System.out.println("estoy en el cup del intermedio");
-                    //if(manejadorErrores_intermedio.size()==0){
+                    intermedio();
+                    System.out.println("estoy en el cup del intermedio");
+                    if(manejadorErrores_intermedio.size()==0){
                        jTextPane_Output.setForeground(new Color(102,123,57));
                        jTextPane_Output.setText("BUILD SUCCESSFUL");
-                   //    jTextPane_Output.setText(jTextPane_Output.getText()+"\n"+codigointermedio);
-                   // }else{
-                   // String merrores=mostrarManejadorErrores2();
-                   // jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
-                //}
+                       jTextPane_Output.setText(jTextPane_Output.getText()+"\n"+codigointermedio);
+                    }else{
+                    String merrores=mostrarManejadorErrores2();
+                    jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
+                }
                     
                 }else{
                     Collections.sort(manejadorErrores,new Comparator<Error1>() { //Ordenamiento a partir de numero de linea

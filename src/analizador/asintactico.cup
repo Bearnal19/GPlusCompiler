@@ -515,7 +515,6 @@ F ::= BOOLEANVAL:i {:RESULT = i;:}
 
 EXPNUM ::= T:i {:
         RESULT = (int) i;
-        System.out.print("Entro a la primera gramatica");
 :} 
 | EXPNUM:e1 SUBS_OP  T:e2 {:
         RESULT = (int) e1 - (int) e2;
@@ -568,7 +567,10 @@ INTVAL ::= NUM:i {:parser.tipoActual = "INT";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
     }
 
-:};
+:}
+|FUNCT:g {:
+    RESULT=g;
+ :};
 
 
 DEC ::= DATA_TYPE ID:i {:
@@ -800,7 +802,7 @@ BODY ::= CURLY_BR2 | SENTEN BODY
 
 SENTENCES ::= SENTEN | SENTEN SENTENCES;
 
-SENTEN ::= INPUT | OUTPUT | FUNCT | DATA_STR | DECLARE_BODY2 | CTRL_STR;
+SENTEN ::= INPUT | OUTPUT | DATA_STR | DECLARE_BODY2 | CTRL_STR;
 
 
 GROUP_STR ::= GROUP ID:i ASSIG_OP NEW GROUP PARENTH1 ID:f COMMA_SIGN MAXMIN:j COMMA_SIGN ID:c PARENTH2 SEMICOLON_SIGN 
@@ -1016,16 +1018,31 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 
 /****FUNCIONES****/
 
-FUNCT ::= GSIMILITUDE |  GFEATURES ;
+FUNCT ::= GSIMILITUDE:i {:RESULT=i; :} |  GFEATURES:i {:RESULT=i; :}  ;
 
-GSIMILITUDE ::= GETSIMILITUDE PARENTH1 ID:i COMMA_SIGN ID:j PARENTH2 SEMICOLON_SIGN {:
+GSIMILITUDE ::= GETSIMILITUDE PARENTH1 ID:i COMMA_SIGN ID:j PARENTH2 {:
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
         if(Tipo.equalsIgnoreCase("Node")){
-          //TSDatos identificador=FCompiler.ts.buscar(i+"");
+        boolean search2 = FCompiler.ts.buscarLex(j+"");
+        if(search2){
+        String Tipo2=FCompiler.ts.RegresarTipo(j+"");
+        if(Tipo2.equalsIgnoreCase("Node")){
+          //TSDatos identificador=FCompiler.ts.buscar(j+"");
           /*AQUI SE DEBE CREAR UNA TABLA DE DATOS DE NODE Y DE FEATURE_WORD DEBE RECUPERAR SU VALOR ENTERO*/
-          
+            int SumaFeaturesNodo1=FCompiler.ts.regresarSumaFeatures(i+"");
+            int SumaFeaturesNodo2=FCompiler.ts.regresarSumaFeatures(j+"");
+             System.out.println("Esto ES GETSIMILITUDE: "+(SumaFeaturesNodo1 - SumaFeaturesNodo2));
+            RESULT = SumaFeaturesNodo1 - SumaFeaturesNodo2 ;
+        }else{
+        String TipoError = "Semantic error: Identifier: "+"\""+j+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(jleft+1)+", column: "+jright+".";
+        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,TipoError));
+        }
+        }else{
+        String NoExiste = "Semantic error: Identifier: "+"\""+j+"\" not declared. Line: "+(jleft+1)+", column: "+jright+".";
+        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,NoExiste));
+    }
         }else{
         String TipoError = "Semantic error: Identifier: "+"\""+i+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,TipoError));
@@ -1034,28 +1051,13 @@ boolean search = FCompiler.ts.buscarLex(i+"");
        String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
-boolean search2 = FCompiler.ts.buscarLex(j+"");
-    if(search2){
-        String Tipo2=FCompiler.ts.RegresarTipo(j+"");
-        if(Tipo2.equalsIgnoreCase("Node")){
-          //TSDatos identificador=FCompiler.ts.buscar(j+"");
-          /*AQUI SE DEBE CREAR UNA TABLA DE DATOS DE NODE Y DE FEATURE_WORD DEBE RECUPERAR SU VALOR ENTERO*/
-          
-        }else{
-        String TipoError = "Semantic error: Identifier: "+"\""+j+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(jleft+1)+", column: "+jright+".";
-        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,TipoError));
-        }
-    }else{
-        String NoExiste = "Semantic error: Identifier: "+"\""+j+"\" not declared. Line: "+(jleft+1)+", column: "+jright+".";
-        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,NoExiste));
-    }
+
 :}
-| GETSIMILITUDE error:e ID COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 error:e COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: COMMA_SIGN ',' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE error:e ID COMMA_SIGN ID PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 error:e COMMA_SIGN ID PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID error:e ID PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: COMMA_SIGN ',' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID COMMA_SIGN error:e PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
 
 GFEATURES ::= GETFEATURES PARENTH1 ID:i POINT_SIGN FEATURE_WORD:j {:
@@ -1076,83 +1078,62 @@ boolean search = FCompiler.ts.buscarLex(i+"");
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
 :} 
+| GETFEATURES PARENTH1 error:e  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'ID.FEATUREWORD)' expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES error:e ID POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Left Parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETFEATURES PARENTH1 error:e POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETFEATURES PARENTH1 error:e POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before '.' . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES PARENTH1 ID:c error:e FEATURE_WORD {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  dot '.' expected after identifier "+c+", is missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES PARENTH1 ID POINT_SIGN error:e  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETFEATURES PARENTH1:e  PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'ID.FEATUREWORD' expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 
 ;
 
 
 FEATURE_WORD ::= 
-ABSTRACTION:i PARENTH2 SEMICOLON_SIGN{:RESULT=i;:} 
-| AFFABILITY:i  PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| APPREHESION:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| ANXIETY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| CARETOSTANDARDS:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| DARE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| DOMINANCE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| HARDNESS:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| INDEPENDENCE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| LIVELINESS:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| OPENNESSTOCHANGE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| PERFECTIONISM:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| PRIVACY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| REASONING:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SELFCONTROL:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SELFSUFFICIENCY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SENSITIVITY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SOCIABILITY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| STABILITY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| STRESS:i PARENTH2 SEMICOLON_SIGN {:RESULT=i;:}  
-| SURVEILLANCE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| ABSTRACTION error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| AFFABILITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| ANXIETY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| CARETOSTANDARDS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DARE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DOMINANCE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| HARDNESS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| INDEPENDENCE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| LIVELINESS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| OPENNESSTOCHANGE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PERFECTIONISM error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PRIVACY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| REASONING error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFCONTROL error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFSUFFICIENCY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SENSITIVITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SOCIABILITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STABILITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STRESS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SURVEILLANCE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| ABSTRACTION PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| AFFABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| ANXIETY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| CARETOSTANDARDS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DARE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DOMINANCE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| HARDNESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| INDEPENDENCE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| LIVELINESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| OPENNESSTOCHANGE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PERFECTIONISM PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PRIVACY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| REASONING PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFCONTROL PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFSUFFICIENCY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SENSITIVITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SOCIABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STRESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing). Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SURVEILLANCE PARENTH2 error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+ABSTRACTION:i PARENTH2 {:RESULT=i;:} 
+| AFFABILITY:i  PARENTH2   {:RESULT=i;:}  
+| APPREHESION:i PARENTH2  {:RESULT=i;:}  
+| ANXIETY:i PARENTH2   {:RESULT=i;:}  
+| CARETOSTANDARDS:i PARENTH2   {:RESULT=i;:}  
+| DARE:i PARENTH2   {:RESULT=i;:}  
+| DOMINANCE:i PARENTH2   {:RESULT=i;:}  
+| HARDNESS:i PARENTH2  {:RESULT=i;:}  
+| INDEPENDENCE:i PARENTH2   {:RESULT=i;:}  
+| LIVELINESS:i PARENTH2  {:RESULT=i;:}  
+| OPENNESSTOCHANGE:i PARENTH2 {:RESULT=i;:}  
+| PERFECTIONISM:i PARENTH2  {:RESULT=i;:}  
+| PRIVACY:i PARENTH2   {:RESULT=i;:}  
+| REASONING:i PARENTH2  {:RESULT=i;:}  
+| SELFCONTROL:i PARENTH2 {:RESULT=i;:}  
+| SELFSUFFICIENCY:i PARENTH2 {:RESULT=i;:}  
+| SENSITIVITY:i PARENTH2 {:RESULT=i;:}  
+| SOCIABILITY:i PARENTH2 {:RESULT=i;:}  
+| STABILITY:i PARENTH2  {:RESULT=i;:}  
+| STRESS:i PARENTH2  {:RESULT=i;:}  
+| SURVEILLANCE:i PARENTH2 {:RESULT=i;:}  
+| ABSTRACTION error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| AFFABILITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| APPREHESION error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| ANXIETY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| CARETOSTANDARDS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| DARE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| DOMINANCE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| HARDNESS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| APPREHESION error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| INDEPENDENCE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| LIVELINESS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| OPENNESSTOCHANGE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| PERFECTIONISM error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| PRIVACY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| REASONING error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SELFCONTROL error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SELFSUFFICIENCY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SENSITIVITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SOCIABILITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| STABILITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| STRESS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SURVEILLANCE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| error:e PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
-
 
 /****CONTROL****/
 
