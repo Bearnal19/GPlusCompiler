@@ -62,6 +62,7 @@ public class FCompiler extends javax.swing.JFrame {
     ArrayList<Error1> manejadorErrores;
     ArrayList<Error1> manejadorErrores_intermedio;
     ArrayList<entradaTS>tablaSimbolos;
+    CodigoIntermedio ci;
     
     /**
      * Creates new form FCompiler
@@ -103,6 +104,7 @@ public class FCompiler extends javax.swing.JFrame {
         buscar(jTextPane_Code.getText().toUpperCase());
          
         undo.add(jTextPane_Code.getText());
+        ci=new CodigoIntermedio(this,false);
         
     }
     
@@ -240,7 +242,7 @@ public class FCompiler extends javax.swing.JFrame {
         tituloPanel.setBounds(0, 0, 1097, 40);
 
         jTextPane_Code.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jTextPane_Code.setText("/*SAMPLE PROGRAM*/\nDECLARE {\n\tINT IDI1;\n\tINT IDI2;\n\tSTRING IDS1;\n\tSTRING IDS2;\n\tBOOLEAN IDB1 ;\n}\n\nMAIN {\n\tIDI1 = 4;\n\tIDI2 = 6;\n\tIDS1 = \"HOLA\";\n\tIDS2 = \" MUNDO\";\n\tIDB1 = TRUE ;\n\tIDS1 = IDS1 + IDS2;\n\tARRAYSTRING ID5 = NEW [ \"h\",\"DDF\"] ;\n\tFEATURES ID4 = NEW FEATURES ( 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21) ;\n\tGROUP ID2 = NEW GROUP (ID4, MAX, ID5);\n\tNODE S = NEW NODE (ID4,\"nom1\",\"job1\");\n\tNODE id = NEW NODE (ID4,\"nom2\",\"job2\");\n\tNODE id1 = NEW NODE (ID4,\"nom3\",\"job3\");\n\tGETFEATURES (S.ANXIETY);\n\tGENERATEGROUP (ID2);\n\tIF (5 > 4){\n\t\tPRINTGRAPH (ID2);\t\n\t\tIF (TRUE && IDB1 ){\n\t\t\n\t\t}ELSE {\n\t\t\tGETSIMILITUDE(ID,ID1);\n\t\t}\n\t}\n\tPRINTLN (\"A\");\n}");
+        jTextPane_Code.setText("/*SAMPLE PROGRAM*/\nDECLARE {\n\tINT IDI1;\n\tINT IDI2;\n\tint idi3;\n\tSTRING IDS1;\n\tSTRING IDS2;\n\tSTRING IDS3;\n\tString Saludo;\n\tBOOLEAN IDB1 ;\n}\n\nMAIN {\n\tIDI1=4+(3+4)-6+(5-5);\n\tIDS1 = \"MI\"; \n\tIDS2 = \" PRIMER\";\n\tIDS3= \"HOLA\"+\"MUNDO\";\n\tIDB1 = TRUE ;\n\tSaludo = IDS1 + IDS2 + IDS3;\n\tARRAYSTRING ID5 = NEW [ \"ING\",\"ARQ\",\"BIO\",\"CIVIL\",\"MECATRONICA\"] ;\n\tFEATURES ID4 = NEW FEATURES ( 19,2,3,4,50,6,40,80,9,10,11,12,13,14,115,16,1,18,19,20,21) ;\n\tFEATURES ID6 = NEW FEATURES ( 11,20,3,4,5,6,7,50,9,10,11,12,13,14,15,16,137,18,19,20,11) ;\n\tGROUP ID2 = NEW GROUP (ID4, MAX, ID5);\n\tNODE S = NEW NODE (ID4,\"Mariela\",\"ING\");\n\tNODE id = NEW NODE (ID6,\"Cesar\",\"BIO\");\n\tNODE id1 = NEW NODE (ID4,\"Ernesto\",\"CIVIL\");\n\tIDI1 = GETFEATURES (S.ANXIETY);\n\tGENERATEGROUP (ID2);\n\tIF (10<((5 - 4)+(6+2))){\n\t\tPRINTGRAPH (ID2);\t\n\t\tPRINTLN (\"Parte\"+\"if\"+\"verdadero\");\n\t\tIF (TRUE && IDB1 %% (5<2) ){\n\t\t\tIDI2 = GETSIMILITUDE(s,ID);\n\t\t}\n\t\t\n\t\tELSE {\n\t\t\tIDI2 = GETSIMILITUDE(ID,ID1);\n\t\t}\n\t       PRINTLN (\"Parte\"+\"fuera\"+\"del\"+\"if\");\n\t}ELSE {\n\t\tPRINTLN (\"A\");\n\t\tID31 = GETFEATURES (S.ANXIETY);\n\t}\n\tLOOP ((10 < (5-2)) && TRUE ){\n\tARRAYSTRING ID10 = NEW [ \"PROGRAMADOR\",\"ADMINISTRADOR\",\"ING REDES\",\"LIDER\",\"DISENADOR\"] ;\n\tFEATURES ID7 = NEW FEATURES ( 11,20,3,4,5,6,7,50,9,10,11,12,13,14,15,16,137,18,19,20,11) ;\n\tGROUP ID22 = NEW GROUP (ID7, MAX, ID10);\n\t}\n\tPRINTLN (\"FIN\"+\"DE\"+\"PROGRAMA\");\n}");
         jTextPane_Code.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextPane_CodeKeyReleased(evt);
@@ -567,7 +569,7 @@ public class FCompiler extends javax.swing.JFrame {
         helpPanel.setBackground(color1);
         
         item1.setIcon(new ImageIcon( getClass().getResource("/run.png"))); 
-        item2.setIcon(new ImageIcon( getClass().getResource("/trans.png"))); 
+        item2.setIcon(new ImageIcon( getClass().getResource("/intermedio.png"))); 
         item3.setIcon(new ImageIcon( getClass().getResource("/trans.png"))); 
         item4.setIcon(new ImageIcon( getClass().getResource("/trans.png"))); 
         item5.setIcon(new ImageIcon( getClass().getResource("/trans.png"))); 
@@ -758,6 +760,15 @@ public class FCompiler extends javax.swing.JFrame {
                 }
                 break;
             case 3:
+                
+                ci.cambiarColores(tituloPanel.getBackground(),cintaPanel.getBackground());
+                if(codigointermedio.length()!=0){
+                    ci.codigo(codigointermedio);
+                    ci.posicionInicial();
+                }
+                ci.setVisible(true);
+                
+                
                 break;
             case 4:
                 color1 = new Color(41,53,65);
@@ -905,6 +916,7 @@ public class FCompiler extends javax.swing.JFrame {
                 break;
             case 4:
                 ElegirColor v = new ElegirColor(this, true);
+                v.cambiarColores(tituloPanel.getBackground(), cintaPanel.getBackground(), tln.getForeground(), tln.getCurrentLineForeground());
                 v.setVisible(true);
                 break;
             case 5:
@@ -1126,16 +1138,22 @@ public class FCompiler extends javax.swing.JFrame {
                 System.out.println("Tamaño manejador errores: "+manejadorErrores.size());
                 if(manejadorErrores.size()==0){
                     
-                    //intermedio();
-                    //System.out.println("estoy en el cup del intermedio");
-                    //if(manejadorErrores_intermedio.size()==0){
+                    intermedio();
+                    System.out.println("estoy en el cup del intermedio");
+                    if(manejadorErrores_intermedio.size()==0){
                        jTextPane_Output.setForeground(new Color(102,123,57));
                        jTextPane_Output.setText("BUILD SUCCESSFUL");
-                   //    jTextPane_Output.setText(jTextPane_Output.getText()+"\n"+codigointermedio);
-                   // }else{
-                   // String merrores=mostrarManejadorErrores2();
-                   // jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
-                //}
+                       ci.cambiarForeground(new Color(51,51,51));
+                       ci.codigo(codigointermedio);
+                       ci.posicionInicial();
+                    }else{
+                    String merrores=mostrarManejadorErrores2();
+                    ci.cambiarForeground(new Color(240,0,0));
+                    codigointermedio="No intermediate code generated";
+                    ci.codigo(codigointermedio);
+                    ci.posicionInicial();
+                    jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
+                }
                     
                 }else{
                     Collections.sort(manejadorErrores,new Comparator<Error1>() { //Ordenamiento a partir de numero de linea
@@ -1146,6 +1164,10 @@ public class FCompiler extends javax.swing.JFrame {
                     });
                     String merrores=mostrarManejadorErrores();
                     jTextPane_Output.setText(jTextPane_Output.getText()+merrores);
+                    ci.cambiarForeground(new Color(240,0,0));
+                    codigointermedio="No intermediate code generated";
+                    ci.codigo(codigointermedio);
+                    ci.posicionInicial();
                 }
                 
             } catch (Exception ex) {
@@ -1334,8 +1356,9 @@ public class FCompiler extends javax.swing.JFrame {
         palabras.add("!="); colores.add(cParam);
         palabras.add("-"); colores.add(cParam);
         palabras.add("&&"); colores.add(cParam);
-        palabras.add("||"); colores.add(cParam);
+        palabras.add("%%"); colores.add(cParam);
         palabras.add("NOT"); colores.add(cParam);
+        palabras.add("//"); colores.add(new Color(104,113,93));
         
         //Palabras reservadas primarias
         palabras.add("ELSE"); colores.add(cRes);

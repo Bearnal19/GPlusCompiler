@@ -32,6 +32,27 @@ public class ElegirColor extends javax.swing.JDialog {
         c3 = parent.color3;
         c4 = parent.color4;
     }
+    
+    public void cambiarColores(Color color1, Color color2, Color color3, Color color4){
+        jPanel2.setBackground(color1);
+        jPanel12.setBackground(color1);
+        jPanel16.setBackground(color1);
+        c11.setBackground(color1);
+        c12.setBackground(color1);
+        
+        jPanel11.setBackground(color2);
+        c21.setBackground(color2);
+        c22.setBackground(color2);
+        c23.setBackground(color2);
+        
+        jLabel9.setForeground(color3);
+        jLabel13.setForeground(color4);
+        
+        c1=color1;
+        c2=color2;
+        c3=color3;
+        c4=color4;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

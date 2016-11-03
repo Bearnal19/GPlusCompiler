@@ -158,6 +158,7 @@ BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2
 DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY
 | DEC:e DECLARE_BODY {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: semicolon ';' at the end of the sentence is missing. Line: "+(eleft+1)+"."));:}
 | DATA_TYPE: i ASSIG SEMICOLON_SIGN DECLARE_BODY  {:
+    try{
     if(parser.esDAssig){
         boolean insert = FCompiler.ts.insertar(parser.tipoActual+"");
         if (!(i.toString().equalsIgnoreCase(parser.tipoActual))){
@@ -185,9 +186,10 @@ DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY
         }
     }
     parser.esDAssig = false;
+ }catch(java.lang.NullPointerException ex){ }
 :}
 | DATA_TYPE ASSIG DECLARE_BODY:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: semicolon ';' expected at the end of the sentence, is missing. Line: "+(eleft+1)+"."));:}
-| ASSIG SEMICOLON_SIGN DECLARE_BODY {:
+| ASSIG2 SEMICOLON_SIGN DECLARE_BODY {:
     if(parser.esDAssig){
         //String error = "Semantic error in line: "+(parser.fil)+", column: "+parser.col+". Identifier: "+"\""+parser.tipoActual+"\" not declared.";
         //parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",Integer.parseInt(parser.fil),Integer.parseInt(parser.col),error));
@@ -219,6 +221,7 @@ DECLARE_BODY2 ::= DEC SEMICOLON_SIGN
     parser.esDAssig = false;
 :}
 | DATA_TYPE :i ASSIG SEMICOLON_SIGN {:
+    try{
     if(parser.esDAssig){
         boolean insert = FCompiler.ts.insertar(parser.tipoActual+"");
         if (!(i.toString().equalsIgnoreCase(parser.tipoActual))){
@@ -246,6 +249,7 @@ DECLARE_BODY2 ::= DEC SEMICOLON_SIGN
         }
     }
     parser.esDAssig = false;
+  }catch(java.lang.NullPointerException ex){ }
 :}
 | error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: EXPRESSION Missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
 | DEC error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -256,15 +260,16 @@ DECLARE_BODY2 ::= DEC SEMICOLON_SIGN
 ;
 
 ASSIG ::= ID:i ASSIG_OP EXP:e   {:
+ try{
     TSDatos datoEncontrado = FCompiler.ts.buscar(i+"");
         if(datoEncontrado != null ){
             if (!(datoEncontrado.tipo.equalsIgnoreCase(parser.tipoActual))){
                 if(parser.salidaTipoActual != null){
                     if(parser.esId){
-                        String error = "Semantic error: Identifier: "+"\""+parser.salidaTipoActual+"\" has "+parser.tipoActual+" type. Type expected: "+ datoEncontrado.tipo+". Line: "+(ileft+1)+", column: "+iright+".";
+                        String error = "Semantic error: Identifier: "+"\""+e+"\" has "+parser.tipoActual+" type. Type expected: "+ datoEncontrado.tipo+". Line: "+(ileft+1)+", column: "+iright+".";
                         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
                     }else{
-                        String error = "Semantic error: Found: "+"\""+parser.salidaTipoActual+"\", has a(n) "+parser.tipoActual+" value type. Value type expected: "+ datoEncontrado.tipo+". Line: "+(ileft+1)+", column: "+iright+".";
+                        String error = "Semantic error: Found: "+"\""+e+"\", has a(n) "+parser.tipoActual+" value type. Value type expected: "+ datoEncontrado.tipo+". Line: "+(ileft+1)+", column: "+iright+".";
                         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
                     }
 
@@ -282,25 +287,75 @@ ASSIG ::= ID:i ASSIG_OP EXP:e   {:
             if(parser.esId){
                 parser.esDAssig = true;
             }
-           /*
-           String error = "Semantic error: identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
-           parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));*/
+
         }
+  }catch(java.lang.NullPointerException ex){ }
+  parser.tipoActual = null;
+   parser.salidaTipoActual = null;
 :}
 |error:e ASSIG_OP EXP{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Identifier expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ID error:e EXP{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  ASSIG operator '=' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ID ASSIG_OP error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  EXPRESSION Missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
+ASSIG2 ::= ID:i ASSIG_OP EXP:e   {:
+ try{
+    TSDatos datoEncontrado = FCompiler.ts.buscar(i+"");
+        if(datoEncontrado != null ){
+            if (!(datoEncontrado.tipo.equalsIgnoreCase(parser.tipoActual))){
+                if(parser.salidaTipoActual != null){
+                    if(parser.esId){
+                        String error = "Semantic error: Identifier: "+"\""+e+"\" has "+parser.tipoActual+" type. Type expected: "+ datoEncontrado.tipo+". Line: "+(ileft+1)+", column: "+iright+".";
+                        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
+                    }else{
+                        String error = "Semantic error: Found: "+"\""+e+"\", has a(n) "+parser.tipoActual+" value type. Value type expected: "+ datoEncontrado.tipo+". Line: "+(ileft+1)+", column: "+iright+".";
+                        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
+                    }
 
-DATA_TYPE ::= STRING_WORD {: parser.tipoActual="STRING"; RESULT = parser.tipoActual;:}
+                }
+            }else{
+                datoEncontrado.valor = e;
+                System.out.println("Valor insertado es "+e);
+            }
+
+        }else{
+            String error = "Semantic error: Identifier: "+"\""+i+"\" has not been declared. Line: "+(ileft+1)+", column: "+iright+".";
+            parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
+        }
+  }catch(java.lang.NullPointerException ex){ }
+    parser.tipoActual = null;
+    parser.salidaTipoActual = null;
+:}
+|error:e ASSIG_OP EXP{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Identifier expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|ID error:e EXP{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  ASSIG operator '=' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|ID ASSIG_OP error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  EXPRESSION Missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
+;
+
+DATA_TYPE ::= STRING_WORD {: try{ parser.tipoActual="STRING"; RESULT = parser.tipoActual; }catch(java.lang.NullPointerException ex){ }:}
 | INT_WORD {: parser.tipoActual="INT"; RESULT = parser.tipoActual; :}
 | BOOLEAN_WORD {: parser.tipoActual="BOOLEAN"; RESULT = parser.tipoActual;:}
-|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Type Data expected . Line: "+(eleft+1)+", column: "+eright+"."));:};
+|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Data type expected. Line: "+(eleft+1)+", column: "+eright+"."));:};
 
+DEC ::= DATA_TYPE:d ID:i {:
+try{
+    boolean insert = FCompiler.ts.insertar(i+"");
+    if(insert){
+        FCompiler.ts.actualizar(i+"","tipo",d);
+        FCompiler.ts.actualizar(i+"", "linea", (ileft+1)+"");
+        FCompiler.ts.actualizar(i+"", "columna", iright+"");
+        FCompiler.ts.pushVar("variable",i+"",(ileft+1)+"",(iright+1)+"");
+    }else{
+        String duplicado = "Semantic error: Identifier: "+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright+".";
+        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
+    }
+}catch(java.lang.NullPointerException ex){ }
+:}
+|error:e ID {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Data Type expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|DATA_TYPE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+;
 
 EXP ::=  ID:i {:
-
+  try{
         TSDatos datoEncontrado = FCompiler.ts.buscar(i+"");
         if(datoEncontrado != null){
             //SINTETIZAR TIPO
@@ -316,73 +371,102 @@ EXP ::=  ID:i {:
             }
         }else{
             String error = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
+            parser.esId = true;
             parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
         }
+   }catch(java.lang.NullPointerException ex){ }
 :}
 | NUM:i {:
+    try{
         //SINTETIZAR TIPO
         parser.tipoActual = "INT";
         parser.salidaTipoActual = i+"";
         parser.esId = false;
         RESULT = i;
+       }catch(java.lang.NullPointerException ex){ }
 :}
 | TRUE :i {:
+    try{
         //SINTETIZAR TIPO
         parser.tipoActual = "BOOLEAN";
         parser.salidaTipoActual = i+"";
         parser.esId = false;
         RESULT = i;
+        }catch(java.lang.NullPointerException ex){ }
 :}
 | FALSE :i {:
+    try{
         //SINTETIZAR TIPO
         parser.tipoActual = "BOOLEAN";
         parser.salidaTipoActual = i+"";
         parser.esId = false;
         RESULT = i;
+        }catch(java.lang.NullPointerException ex){ }
 :}
 | STRINGVAL :i {:
+    try{
         //SINTETIZAR TIPO
         parser.tipoActual = "STRING";
         parser.salidaTipoActual = i+"";
         parser.esId = false;
         RESULT = i;
+        }catch(java.lang.NullPointerException ex){ }
 :}
 |  EXPNUM :e1{:
+    try{
         //SINTETIZAR TIPO
+        parser.tipoActual = "INT";
+        parser.salidaTipoActual = e1+"";
+        parser.esId = false;
         RESULT = (int) e1;
+      }catch(java.lang.NullPointerException ex){ }
 :}
 |PARENTH1 EXP: i PARENTH2 {:
+    try{
         //SINTETIZAR TIPO
         RESULT = i;
+       }catch(java.lang.NullPointerException ex){ }
 :}
 | COND :i {:
+        try{
         //SINTETIZAR TIPO
+        parser.tipoActual = "BOOLEAN";
+        parser.salidaTipoActual = i+"";
+        parser.esId = false;
         RESULT = i;
+        }catch(java.lang.NullPointerException ex){ }
 :}
 |error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  malformed expression structure. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
 STRINGVAL ::= STRINGVALAUX:s1 {:
+    try{
     if(s1!=null){
         RESULT=s1.toString();
     }
+    }catch(java.lang.NullPointerException ex){ }
 :}
 | STRINGVALAUX:s1 ADD_OP STRINGVAL:s2 {:
+    try{
     if(s1!=null && s2 !=null){
         RESULT=s1.toString()+s2.toString();
     }
+    }catch(java.lang.NullPointerException ex){ }
 :}
 |error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  VALUE Missing . Line: "+(eleft+1)+", column: "+eright+"."));:}
 |STRINGVALAUX error:e STRINGVAL {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  SUM operator '+' Missing . Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
 STRINGVALAUX::= STRING:f {:
+try{
 String sincomillas= f.replace('"',' ');
 sincomillas=sincomillas.replaceAll(" ","");
 RESULT=sincomillas;
 parser.valorActual= f;
+}catch(java.lang.NullPointerException ex){ }
 :}
 | ID:i {:
+try{
  boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -406,14 +490,15 @@ parser.valorActual= f;
         String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
-
+}catch(java.lang.NullPointerException ex){ }
 :}
 |error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: STRING value Missing. Line: "+(eleft+1)+", column: "+eright+"."));:};
 
 BOOLEANVAL ::=
-  TRUE:f  {:RESULT=f; parser.valorActual=f; :}
-| FALSE:f {:RESULT=f; parser.valorActual=f; :}
+  TRUE:f  {:try{ RESULT=f; parser.valorActual=f; }catch(java.lang.NullPointerException ex){ } :}
+| FALSE:f {:try { RESULT=f; parser.valorActual=f; }catch(java.lang.NullPointerException ex){ } :}
 | ID:i {:
+try{
  boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -435,38 +520,52 @@ BOOLEANVAL ::=
         String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
-
+}catch(java.lang.NullPointerException ex){ }
 :}
 | error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Boolean datatype expected. Line: "+(eleft+1)+", column: "+eright+"."));:};
 
-OP_ARIT ::=  ADD_OP :f  {:RESULT="ADD_OP"; :}
-| SUBS_OP :f  {:RESULT="SUBS_OP"; :};
+OP_ARIT ::=  ADD_OP :f  {:try {RESULT="ADD_OP"; }catch(java.lang.NullPointerException ex){ } :}
+| SUBS_OP :f  {: try{ RESULT="SUBS_OP"; }catch(java.lang.NullPointerException ex){ } :};
 
-OP_LOG ::= AND_OP :f  {:RESULT="AND_OP"; :}
-|OR_OP :f  {:RESULT="OR_OP"; :};
+OP_LOG ::= AND_OP :f  {: try{ RESULT="AND_OP"; }catch(java.lang.NullPointerException ex){ } :}
+|OR_OP :f  {: try{ RESULT="OR_OP"; }catch(java.lang.NullPointerException ex){ } :}
+;
 
 OP_REL ::= EQUAL_OP :i{:
+    try{
     RESULT = "EQUAL_OP";
+    }catch(java.lang.NullPointerException ex){ }
 :}
 | GREATER_EQUAL_OP :i{:
+try{
     RESULT = "GREATER_EQUAL_OP";
+}catch(java.lang.NullPointerException ex){ }
 :}
 | LESS_EQUAL_OP :i{:
+try{
     RESULT = "LESS_EQUAL_OP";
+}catch(java.lang.NullPointerException ex){ }
 :}
 | NOT_EQUAL_OP :i{:
+try{
     RESULT = "NOT_EQUAL_OP";
+}catch(java.lang.NullPointerException ex){ }
 :}
 | LESS_OP :i{:
+try{
     RESULT = "LESS_OP";
+}catch(java.lang.NullPointerException ex){ }
 :}
 | GREATER_OP:i{:
+try{
     RESULT = "GREATER_OP";
+}catch(java.lang.NullPointerException ex){ }
 :}
 ;
 
 
 COND ::= F:e1 OP_LOG:o COND:e2 {:
+try{
     if(o.toString().equalsIgnoreCase("AND_OP")){
         if(e1.toString().equalsIgnoreCase("TRUE")){
             if(e2.toString().equalsIgnoreCase("TRUE")){
@@ -486,13 +585,16 @@ COND ::= F:e1 OP_LOG:o COND:e2 {:
             RESULT = "FALSE";
         }
     }else{
-        parser.ManejadorDeErrores.add(new Error1("ES",oleft-1,oright,"Syntax Error: Logic operator expected. Line: "+(oleft+1)+", column: "+oright+"."));
+        parser.ManejadorDeErrores.add(new Error1("ES",oleft-1,oright,"Syntax Error: Logical operator expected. Line: "+(oleft+1)+", column: "+oright+"."));
     }
+}catch(java.lang.NullPointerException ex){ }
+:}  | F:f{: try { RESULT=f; }catch(java.lang.NullPointerException ex){ }:}
+    | F error:e COND {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Logical operator expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+;
 
-:}  | F:f{:RESULT=f;:};
-
-F ::= BOOLEANVAL:i {:RESULT = i;:} 
+F ::= BOOLEANVAL:i {: try{ RESULT = i;}catch(java.lang.NullPointerException ex){ }:} 
 | EXPNUM:e1 OP_REL:o EXPNUM:e2{:
+ try{
     if(o.equals("EQUAL_OP")){
         RESULT = Integer.parseInt(e1.toString()) == Integer.parseInt(e2.toString());
         System.out.println("Primera expresion "+e1+". Segunda expresion "+e2+". Result "+ RESULT);
@@ -507,23 +609,30 @@ F ::= BOOLEANVAL:i {:RESULT = i;:}
     }else if(o.equals("GEATER_EQUAL_OP")){
         RESULT = Integer.parseInt(e1.toString()) >= Integer.parseInt(e2.toString());
     }
+}catch(java.lang.NullPointerException ex){ }
     :}
-| PARENTH1 COND:i PARENTH2{:RESULT=i; :}
+| PARENTH1 COND:i PARENTH2{: try{RESULT=i; }catch(java.lang.NullPointerException ex){ }:}
+| EXPNUM error:e EXPNUM{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Relational operator expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
 
 
 EXPNUM ::= T:i {:
+try{
         RESULT = (int) i;
-        System.out.print("Entro a la primera gramatica");
+}catch(java.lang.NullPointerException ex){ }
 :} 
 | EXPNUM:e1 SUBS_OP  T:e2 {:
+try{
         RESULT = (int) e1 - (int) e2;
-        System.out.print("exp1 "+e1 +"- exp2 " + e2 + " = " + RESULT);  
+        System.out.print("exp1 "+e1 +"- exp2 " + e2 + " = " + RESULT); 
+}catch(java.lang.NullPointerException ex){ } 
     :}
 
 | EXPNUM :e1 ADD_OP  T:e2 {:
+try{
         RESULT = (int) e1+ (int) e2;
+}catch(java.lang.NullPointerException ex){ }
     :} 
 |error:e ADD_OP T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+".")); :}
 |EXPNUM error:e T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Addition/Substraction operator expected. Line: "+(eleft+1)+", column: "+eright+"."));:} 
@@ -534,18 +643,28 @@ EXPNUM ::= T:i {:
 ;
 
 T ::= INTVAL :i {:
+try{
         RESULT = (int) i;
+}catch(java.lang.NullPointerException ex){ }
     :} | PARENTH1 EXPNUM :i PARENTH2 {:
+try{
         RESULT = (int) i;
+}catch(java.lang.NullPointerException ex){ }
     :};
 
 
 
-INTVAL ::= NUM:i {:parser.tipoActual = "INT";    
+INTVAL ::= NUM:i {:
+        try{
+        parser.tipoActual = "INT";    
         parser.salidaTipoActual = i+"";
         parser.esId = false;
-        RESULT = i;:} 
+        RESULT = i;
+}catch(java.lang.NullPointerException ex){ }
+:} 
+     
 | ID:i {:
+    try{
     TSDatos datoEncontrado = FCompiler.ts.buscar(i+"");
     if(datoEncontrado != null){
         if(datoEncontrado.tipo.equalsIgnoreCase("INT")){
@@ -567,35 +686,24 @@ INTVAL ::= NUM:i {:parser.tipoActual = "INT";
         String error = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,error));
     }
-
-:};
-
-
-DEC ::= DATA_TYPE ID:i {:
-
-    boolean insert = FCompiler.ts.insertar(i+"");
-    if(insert){
-        FCompiler.ts.actualizar(i+"","tipo",parser.tipoActual);
-        FCompiler.ts.actualizar(i+"", "linea", (ileft+1)+"");
-        FCompiler.ts.actualizar(i+"", "columna", iright+"");
-        FCompiler.ts.pushVar("variable",i+"",(ileft+1)+"",(iright+1)+"");
-    }else{
-        String duplicado = "Semantic error: Identifier: "+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright+".";
-        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
-    }
+}catch(java.lang.NullPointerException ex){ }
 :}
-|error:e ID {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Data Type expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|DATA_TYPE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-;
+|FUNCT:g {:
+try{
+    RESULT=g;
+}catch(java.lang.NullPointerException ex){ }
+ :};
+
 
 /*-----------------GRAMATICAS BUILD xx ELIMINADO XX  --ESTRUCTURAS DE DATOS-- ---------------------*/  
 
 DATA_STR::= NODE_STR | ARRAYSTRING_STR | FEATURES_STR | GROUP_STR 
-|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: data structure expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft+1,eright,"Syntax Error: Invalid sentence. Line: "+(eleft+1)+", column: "+eright+"."));:}
 ;
 
 NODE_STR ::= NODE ID:i ASSIG_OP NEW NODE PARENTH1 ID:f COMMA_SIGN STRINGVAL:j COMMA_SIGN STRINGVAL:k PARENTH2 SEMICOLON_SIGN 
 {:
+try{
   boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
         FCompiler.ts.actualizar(i+"","tipo","NODE");
@@ -632,9 +740,9 @@ NODE_STR ::= NODE ID:i ASSIG_OP NEW NODE PARENTH1 ID:f COMMA_SIGN STRINGVAL:j CO
     }
 
 
-
+}catch(java.lang.NullPointerException ex){ }
 :}
-|ID:e ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: NODE type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|ID:e ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: NODE word expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |error:e ID ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'NODE' word expected  before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |NODE error:e ASSIG_OP NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Identifier expected  before assignment. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |NODE ID error:e NEW NODE PARENTH1 ID COMMA_SIGN STRINGVAL COMMA_SIGN STRINGVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Assignment operator '=' missing. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -651,6 +759,7 @@ NODE_STR ::= NODE ID:i ASSIG_OP NEW NODE PARENTH1 ID:f COMMA_SIGN STRINGVAL:j CO
 ;
 
 ARRAYSTRING_STR ::=  ARRAYSTRING ID:i ASSIG_OP NEW BRACKET1 ARRAYVAL:j BRACKET2 SEMICOLON_SIGN {:
+try{
 boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
         FCompiler.ts.actualizar(i+"","tipo","ARRAYSTRING");
@@ -664,9 +773,10 @@ boolean insert = FCompiler.ts.insertar(i+"");
         String duplicado = "Semantic error: Identifier:"+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}
 |ARRAYSTRING ID ASSIG_OP NEW BRACKET1 ARRAYVAL:e  SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Braket ']' expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
-|ID:e ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ARRAYSTRING type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|ID:e ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ARRAYSTRING word expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING error:e ASSIG_OP NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING ID error:e NEW BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: ASSIG '=' missing . Line: "+(eleft+1)+", column: "+eright+"."));:}
 |ARRAYSTRING ID ASSIG_OP error:e BRACKET1 ARRAYVAL BRACKET2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: 'NEW' word expected after assignment operator. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -677,11 +787,14 @@ boolean insert = FCompiler.ts.insertar(i+"");
 ;
 
 ARRAYVAL ::= STRINGVAL:i {:
+try{
  RESULT=i;
-
+}catch(java.lang.NullPointerException ex){ }
 :}  
 | STRINGVAL:i COMMA_SIGN ARRAYVAL:j {:
+try{
 RESULT= i+","+j;
+}catch(java.lang.NullPointerException ex){ }
 :}
 |error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  STRINGVAL expected. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |error:e COMMA_SIGN ARRAYVAL {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  STRINGVAL expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
@@ -690,6 +803,7 @@ RESULT= i+","+j;
 ;  
 
 FEATURES_STR ::= FEATURES ID:i ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL:e PARENTH2 SEMICOLON_SIGN{:
+try{
 boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
         FCompiler.ts.actualizar(i+"","tipo","FEATURES");
@@ -727,8 +841,9 @@ boolean insert = FCompiler.ts.insertar(i+"");
         String duplicado = "Semantic error: Identifier:"+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}                                                                                                                                                                                                      
-| ID:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURES type expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
+| ID:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURES word expected before identifier. Line: "+(eleft+1)+", column: "+eright+"."));:}
 |FEATURES error:e ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  ID expected after 'FEATURES' word. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID error:e NEW FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  Assignment operator ('=') Missing. Line: "+(eleft+1)+", column: "+eright+"."));:}  
 |FEATURES ID ASSIG_OP error:e FEATURES PARENTH1 FEATURESVAL PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  'NEW' word expected after assignment operator. Line: "+(eleft+1)+", column: "+eright+"."));:}  
@@ -742,7 +857,9 @@ boolean insert = FCompiler.ts.insertar(i+"");
 
 FEATURESVAL ::= EXPNUM:e1 COMMA_SIGN EXPNUM:e2 COMMA_SIGN EXPNUM:e3 COMMA_SIGN EXPNUM:e4 COMMA_SIGN EXPNUM:e5 COMMA_SIGN EXPNUM:e6 COMMA_SIGN EXPNUM:e7 COMMA_SIGN EXPNUM:e8 COMMA_SIGN EXPNUM:e9 COMMA_SIGN EXPNUM:e10 COMMA_SIGN EXPNUM:e11 COMMA_SIGN EXPNUM:e12 COMMA_SIGN EXPNUM:e13 COMMA_SIGN EXPNUM:e14 COMMA_SIGN EXPNUM:e15 COMMA_SIGN EXPNUM:e16 COMMA_SIGN EXPNUM:e17 COMMA_SIGN EXPNUM:e18 COMMA_SIGN EXPNUM:e19 COMMA_SIGN EXPNUM:e20 COMMA_SIGN EXPNUM:e21
 {:
+try{
 RESULT=e1+","+e2+","+e3+","+e4+","+e5+","+e6+","+e7+","+e8+","+e9+","+e10+","+e11+","+e12+","+e13+","+e14+","+e15+","+e16+","+e17+","+e18+","+e19+","+e20+","+e21;
+}catch(java.lang.NullPointerException ex){ }
 :}
 |error:e COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  INTVAL expected Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}  
 |EXPNUM             EXPNUM:e COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM COMMA_SIGN EXPNUM {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  COMA SING ',' expected Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:} 
@@ -800,11 +917,12 @@ BODY ::= CURLY_BR2 | SENTEN BODY
 
 SENTENCES ::= SENTEN | SENTEN SENTENCES;
 
-SENTEN ::= INPUT | OUTPUT | FUNCT | DATA_STR | DECLARE_BODY2 | CTRL_STR;
+SENTEN ::= INPUT | OUTPUT | DATA_STR | DECLARE_BODY2 | CTRL_STR | FUNCT:e SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft+1,eright,"Syntax Error: Function returns a value that needs to be assigned. Line: "+(eleft+1)+", column: "+eright+".")); :};
 
 
 GROUP_STR ::= GROUP ID:i ASSIG_OP NEW GROUP PARENTH1 ID:f COMMA_SIGN MAXMIN:j COMMA_SIGN ID:c PARENTH2 SEMICOLON_SIGN 
 {:
+try{
 boolean insert = FCompiler.ts.insertar(i+"");
     if(insert){
         FCompiler.ts.actualizar(i+"","tipo","GROUP");
@@ -851,7 +969,7 @@ boolean insert = FCompiler.ts.insertar(i+"");
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(fleft+1),fright,TipoError));
         }
     }else{
-        String NoExiste = "Semantic error:  Identifier:"+"\""+c+"\" is not type ArrayString. Line: "+(fleft+1)+", column: "+fright +".";
+        String NoExiste = "Semantic error:  Identifier:"+"\""+f+"\" is not ArrayString type. Line: "+(fleft+1)+", column: "+fright +".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(fleft+1),fright,NoExiste));
     }
     
@@ -878,8 +996,9 @@ boolean insert = FCompiler.ts.insertar(i+"");
         String duplicado = "Semantic error: Identifier: "+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,duplicado));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}
-| ID:e ASSIG_OP NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: GROUP type expected before identifier. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| ID:e ASSIG_OP NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: GROUP word expected before identifier. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GROUP error:e ASSIG_OP NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GROUP ID error:e NEW GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ASSIG('=') missing . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GROUP ID ASSIG_OP error:e GROUP PARENTH1 ID COMMA_SIGN MAXMIN COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'NEW' expected before missing . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
@@ -897,10 +1016,14 @@ boolean insert = FCompiler.ts.insertar(i+"");
 
 
 MAXMIN ::= MAX:i{:
+try{
 RESULT=i;
+}catch(java.lang.NullPointerException ex){ }
 :} 
 | MIN:i{:
+try{
 RESULT=i;
+}catch(java.lang.NullPointerException ex){ }
 :};
 
 /***ENTRADA*****/
@@ -908,6 +1031,7 @@ RESULT=i;
 INPUT ::= READFEAT  | READS;
 
 READFEAT ::= READFEATVAL PARENTH1 ID:i PARENTH2 SEMICOLON_SIGN {:
+try{
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -923,6 +1047,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
         String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}
 |READFEATVAL error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 |READFEATVAL PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
@@ -932,6 +1057,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 ;
 
 READS ::= READSTRING PARENTH1 ID:i PARENTH2 SEMICOLON_SIGN {:
+try{
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -947,6 +1073,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
         String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}
 | READSTRING error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left Parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | READSTRING PARENTH1 error:e PARENTH2 SEMICOLON_SIGN {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
@@ -969,6 +1096,7 @@ PLN ::= PRINTLN PARENTH1 STRINGVAL PARENTH2 SEMICOLON_SIGN
 
 GNGROUP ::= GENERATEGROUP PARENTH1 ID:i PARENTH2 SEMICOLON_SIGN
 {:
+try{
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -984,6 +1112,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
         String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}
 | GENERATEGROUP error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GENERATEGROUP PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
@@ -993,6 +1122,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 
 PGPH ::= PRINTGRAPH PARENTH1 ID:i PARENTH2 SEMICOLON_SIGN
 {:
+try{
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -1006,6 +1136,7 @@ boolean search = FCompiler.ts.buscarLex(i+"");
          String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
+}catch(java.lang.NullPointerException ex){ }
 :}
 | PRINTGRAPH error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | PRINTGRAPH PARENTH1 error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
@@ -1016,16 +1147,32 @@ boolean search = FCompiler.ts.buscarLex(i+"");
 
 /****FUNCIONES****/
 
-FUNCT ::= GSIMILITUDE |  GFEATURES ;
+FUNCT ::= GSIMILITUDE:i {: try{ RESULT=i; }catch(java.lang.NullPointerException ex){ } :} |  GFEATURES:i {: try{ RESULT=i; }catch(java.lang.NullPointerException ex){ } :}  ;
 
-GSIMILITUDE ::= GETSIMILITUDE PARENTH1 ID:i COMMA_SIGN ID:j PARENTH2 SEMICOLON_SIGN {:
+GSIMILITUDE ::= GETSIMILITUDE PARENTH1 ID:i COMMA_SIGN ID:j PARENTH2 {:
+try{
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
         if(Tipo.equalsIgnoreCase("Node")){
-          //TSDatos identificador=FCompiler.ts.buscar(i+"");
+        boolean search2 = FCompiler.ts.buscarLex(j+"");
+        if(search2){
+        String Tipo2=FCompiler.ts.RegresarTipo(j+"");
+        if(Tipo2.equalsIgnoreCase("Node")){
+          //TSDatos identificador=FCompiler.ts.buscar(j+"");
           /*AQUI SE DEBE CREAR UNA TABLA DE DATOS DE NODE Y DE FEATURE_WORD DEBE RECUPERAR SU VALOR ENTERO*/
-          
+            int SumaFeaturesNodo1=FCompiler.ts.regresarSumaFeatures(i+"");
+            int SumaFeaturesNodo2=FCompiler.ts.regresarSumaFeatures(j+"");
+             System.out.println("Esto ES GETSIMILITUDE: "+(SumaFeaturesNodo1 - SumaFeaturesNodo2));
+            RESULT = SumaFeaturesNodo1 - SumaFeaturesNodo2 ;
+        }else{
+        String TipoError = "Semantic error: Identifier: "+"\""+j+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(jleft+1)+", column: "+jright+".";
+        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,TipoError));
+        }
+        }else{
+        String NoExiste = "Semantic error: Identifier: "+"\""+j+"\" not declared. Line: "+(jleft+1)+", column: "+jright+".";
+        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,NoExiste));
+    }
         }else{
         String TipoError = "Semantic error: Identifier: "+"\""+i+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,TipoError));
@@ -1034,31 +1181,17 @@ boolean search = FCompiler.ts.buscarLex(i+"");
        String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
-boolean search2 = FCompiler.ts.buscarLex(j+"");
-    if(search2){
-        String Tipo2=FCompiler.ts.RegresarTipo(j+"");
-        if(Tipo2.equalsIgnoreCase("Node")){
-          //TSDatos identificador=FCompiler.ts.buscar(j+"");
-          /*AQUI SE DEBE CREAR UNA TABLA DE DATOS DE NODE Y DE FEATURE_WORD DEBE RECUPERAR SU VALOR ENTERO*/
-          
-        }else{
-        String TipoError = "Semantic error: Identifier: "+"\""+j+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(jleft+1)+", column: "+jright+".";
-        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,TipoError));
-        }
-    }else{
-        String NoExiste = "Semantic error: Identifier: "+"\""+j+"\" not declared. Line: "+(jleft+1)+", column: "+jright+".";
-        parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(jleft+1),jright,NoExiste));
-    }
+}catch(java.lang.NullPointerException ex){ }
 :}
-| GETSIMILITUDE error:e ID COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 error:e COMMA_SIGN ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID error:e ID PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: COMMA_SIGN ',' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON ';' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE error:e ID COMMA_SIGN ID PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: left parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 error:e COMMA_SIGN ID PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID error:e ID PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: COMMA_SIGN ',' missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID COMMA_SIGN error:e PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETSIMILITUDE PARENTH1 ID COMMA_SIGN ID error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
 
 GFEATURES ::= GETFEATURES PARENTH1 ID:i POINT_SIGN FEATURE_WORD:j {:
+try{
 boolean search = FCompiler.ts.buscarLex(i+"");
     if(search){
         String Tipo=FCompiler.ts.RegresarTipo(i+"");
@@ -1075,84 +1208,65 @@ boolean search = FCompiler.ts.buscarLex(i+"");
         String NoExiste = "Semantic error: Identifier: "+"\""+i+"\" not declared. Line: "+(ileft+1)+", column: "+iright+".";
         parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",(ileft+1),iright,NoExiste));
     }
+}catch(java.lang.NullPointerException ex){ }
 :} 
+| GETFEATURES PARENTH1 error:e  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'ID.FEATUREWORD)' expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES error:e ID POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Left Parenthesis expected '('. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| GETFEATURES PARENTH1 error:e POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETFEATURES PARENTH1 error:e POINT_SIGN FEATURE_WORD  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: ID expected  before '.' . Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES PARENTH1 ID:c error:e FEATURE_WORD {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:  dot '.' expected after identifier "+c+", is missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 | GETFEATURES PARENTH1 ID POINT_SIGN error:e  {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETFEATURES PARENTH1:e  PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'ID.FEATUREWORD' expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| GETFEATURES PARENTH1 error:e PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: 'ID.FEATUREWORD' expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 
 ;
 
 
 FEATURE_WORD ::= 
-ABSTRACTION:i PARENTH2 SEMICOLON_SIGN{:RESULT=i;:} 
-| AFFABILITY:i  PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| APPREHESION:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| ANXIETY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| CARETOSTANDARDS:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| DARE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| DOMINANCE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| HARDNESS:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| INDEPENDENCE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| LIVELINESS:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| OPENNESSTOCHANGE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| PERFECTIONISM:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| PRIVACY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| REASONING:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SELFCONTROL:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SELFSUFFICIENCY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SENSITIVITY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| SOCIABILITY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| STABILITY:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| STRESS:i PARENTH2 SEMICOLON_SIGN {:RESULT=i;:}  
-| SURVEILLANCE:i PARENTH2 SEMICOLON_SIGN  {:RESULT=i;:}  
-| ABSTRACTION error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| AFFABILITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| ANXIETY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| CARETOSTANDARDS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DARE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DOMINANCE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| HARDNESS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| INDEPENDENCE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| LIVELINESS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| OPENNESSTOCHANGE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PERFECTIONISM error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PRIVACY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| REASONING error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFCONTROL error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFSUFFICIENCY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SENSITIVITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SOCIABILITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STABILITY error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STRESS error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SURVEILLANCE error:e SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| error:e PARENTH2 SEMICOLON_SIGN{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| ABSTRACTION PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| AFFABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| ANXIETY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| CARETOSTANDARDS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DARE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| DOMINANCE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| HARDNESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| APPREHESION PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| INDEPENDENCE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| LIVELINESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| OPENNESSTOCHANGE PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PERFECTIONISM PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error:Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| PRIVACY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| REASONING PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFCONTROL PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SELFSUFFICIENCY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SENSITIVITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SOCIABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STABILITY PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| STRESS PARENTH2 error:e{:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing). Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
-| SURVEILLANCE PARENTH2 error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: SEMICOLON(';') Missing. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+ABSTRACTION:i PARENTH2 {: try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:} 
+| AFFABILITY:i  PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| APPREHESION:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| ANXIETY:i PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| CARETOSTANDARDS:i PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| DARE:i PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| DOMINANCE:i PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| HARDNESS:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| INDEPENDENCE:i PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| LIVELINESS:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| OPENNESSTOCHANGE:i PARENTH2 {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| PERFECTIONISM:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| PRIVACY:i PARENTH2   {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| REASONING:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| SELFCONTROL:i PARENTH2 {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| SELFSUFFICIENCY:i PARENTH2 {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| SENSITIVITY:i PARENTH2 {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| SOCIABILITY:i PARENTH2 {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| STABILITY:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| STRESS:i PARENTH2  {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| SURVEILLANCE:i PARENTH2 {:try { RESULT=i; }catch(java.lang.NullPointerException ex){ }:}  
+| ABSTRACTION error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| AFFABILITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| APPREHESION error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| ANXIETY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| CARETOSTANDARDS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| DARE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| DOMINANCE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| HARDNESS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| APPREHESION error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| INDEPENDENCE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| LIVELINESS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| OPENNESSTOCHANGE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| PERFECTIONISM error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| PRIVACY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| REASONING error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SELFCONTROL error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SELFSUFFICIENCY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SENSITIVITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SOCIABILITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| STABILITY error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| STRESS error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| SURVEILLANCE error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Right Parenthesis expected ')'. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
+| error:e PARENTH2 {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Syntax Error: FEATURE WORD expected. Line: "+(eleft+1)+", column: "+(eright+2)+"."));:}
 ;
-
 
 /****CONTROL****/
 
