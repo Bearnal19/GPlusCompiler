@@ -18,7 +18,6 @@ ArrayList<TSDatos> ts;
     public TSimbolos(){
        ts =new ArrayList<TSDatos>();
        var = new ArrayList<String>();
-       System.out.print("Tabla semantica creada");    
     }
     
     public boolean insertar(String idnombre){

@@ -178,7 +178,6 @@ DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY
                 FCompiler.ts.actualizar(parser.salidaTipoActual+"", "linea", parser.fil);
                 FCompiler.ts.actualizar(parser.salidaTipoActual+"", "columna", parser.col);
                 FCompiler.ts.actualizar(parser.salidaTipoActual+"","valor",parser.valorActual+"");
-                System.out.println("Valores "+parser.tipoActual+". Fila: "+parser.fil+". Columna: "+parser.col+". Valor: "+parser.valorActual);
             }else{
                 String error = "Semantic error: identifier:"+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+(iright)+".";
                 parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",Integer.parseInt(parser.fil),Integer.parseInt(parser.col),error));
@@ -194,7 +193,6 @@ DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY
         //String error = "Semantic error in line: "+(parser.fil)+", column: "+parser.col+". Identifier: "+"\""+parser.tipoActual+"\" not declared.";
         //parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",Integer.parseInt(parser.fil),Integer.parseInt(parser.col),error));
     } else{
-        System.out.println("NO SE QUE HACES AQUI XD");
     }
     parser.esDAssig = false;
 :} 
@@ -241,7 +239,6 @@ DECLARE_BODY2 ::= DEC SEMICOLON_SIGN
                 FCompiler.ts.actualizar(parser.salidaTipoActual+"", "linea", parser.fil);
                 FCompiler.ts.actualizar(parser.salidaTipoActual+"", "columna", parser.col);
                 FCompiler.ts.actualizar(parser.salidaTipoActual+"","valor",parser.valorActual+"");
-                System.out.println("Valores "+parser.tipoActual+". Fila: "+parser.fil+". Columna: "+parser.col+". Valor: "+parser.valorActual);
             }else{
                 String error = "Semantic error: Identifier:"+"\""+i+"\" is duplicated. Line: "+(ileft+1)+", column: "+iright+".";
                 parser.ManejadorDeErrores.add(new Error1("Semantic Error: ",Integer.parseInt(parser.fil),Integer.parseInt(parser.col),error));
@@ -276,12 +273,10 @@ ASSIG ::= ID:i ASSIG_OP EXP:e   {:
                 }
             }else{
                 datoEncontrado.valor = e;
-                System.out.println("Valor insertado es "+e);
             }
 
         }else{
             parser.valorActual = e;
-            System.out.println("Valor insertado es "+e);
             parser.col = iright+"";
             parser.fil = (ileft+1)+"";
             if(parser.esId){
@@ -315,7 +310,6 @@ ASSIG2 ::= ID:i ASSIG_OP EXP:e   {:
                 }
             }else{
                 datoEncontrado.valor = e;
-                System.out.println("Valor insertado es "+e);
             }
 
         }else{
@@ -597,7 +591,6 @@ F ::= BOOLEANVAL:i {: try{ RESULT = i;}catch(java.lang.NullPointerException ex){
  try{
     if(o.equals("EQUAL_OP")){
         RESULT = Integer.parseInt(e1.toString()) == Integer.parseInt(e2.toString());
-        System.out.println("Primera expresion "+e1+". Segunda expresion "+e2+". Result "+ RESULT);
     }else if(o.equals("GREATER_OP")){
         RESULT = Integer.parseInt(e1.toString()) > Integer.parseInt(e2.toString());
     }else if(o.equals("LESS_EQUAL_OP")){
@@ -625,7 +618,6 @@ try{
 | EXPNUM:e1 SUBS_OP  T:e2 {:
 try{
         RESULT = (int) e1 - (int) e2;
-        System.out.print("exp1 "+e1 +"- exp2 " + e2 + " = " + RESULT); 
 }catch(java.lang.NullPointerException ex){ } 
     :}
 
@@ -1163,7 +1155,6 @@ boolean search = FCompiler.ts.buscarLex(i+"");
           /*AQUI SE DEBE CREAR UNA TABLA DE DATOS DE NODE Y DE FEATURE_WORD DEBE RECUPERAR SU VALOR ENTERO*/
             int SumaFeaturesNodo1=FCompiler.ts.regresarSumaFeatures(i+"");
             int SumaFeaturesNodo2=FCompiler.ts.regresarSumaFeatures(j+"");
-             System.out.println("Esto ES GETSIMILITUDE: "+(SumaFeaturesNodo1 - SumaFeaturesNodo2));
             RESULT = SumaFeaturesNodo1 - SumaFeaturesNodo2 ;
         }else{
         String TipoError = "Semantic error: Identifier: "+"\""+j+"\" is not type NODE. Expected: NODE type identifier/value. Line: "+(jleft+1)+", column: "+jright+".";

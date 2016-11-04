@@ -54,7 +54,6 @@ public class Generador {
             case GOTO:
                 return "salta " + resultado + "\n";
             case ASIG:
-                out.println("       " + resultado + " = " + arg1 + ";");
                 return "   	   " + resultado + " = " + arg1 + "\n";
             case LABEL:
                 return resultado + ":\n";

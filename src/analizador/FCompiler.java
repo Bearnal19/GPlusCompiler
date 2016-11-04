@@ -51,7 +51,7 @@ public class FCompiler extends javax.swing.JFrame {
     int x,y,op,puntero;
     String nombreArchivo="src/analizador/code.txt",pathAbrir = "",textoSeleccionado="",code="";
     ArrayList<String> undo = new ArrayList<String>(),redo = new ArrayList<String>();
-    Color color1,color2,color3,color4, cRes, cRes2, cData, cClass, cComent, cCad, cParam;
+    Color color1,color2,color3,color4, cRes, cRes2, cData, cClass, cComent, cCad, cParam,cOP;
     TextLineNumber tln;
     static TSimbolos ts = new TSimbolos();
     ManejadorErrores manejadorE;
@@ -94,12 +94,13 @@ public class FCompiler extends javax.swing.JFrame {
         jScrollPane1.setRowHeaderView(tln);
         
         cRes = new Color(249,38,114);
-        cRes2 = new Color(174,129,188);
+        cRes2 = new Color(128,0,255);
         cData = new Color(72,192,239);
         cClass = new Color(103, 223, 116);
         cComent = new Color(104,113,94);
         cCad = new Color(230,219,116);
         cParam = new Color(253,151,32);
+        cOP = new Color(245,3,75);
      
         buscar(jTextPane_Code.getText().toUpperCase());
          
@@ -242,7 +243,7 @@ public class FCompiler extends javax.swing.JFrame {
         tituloPanel.setBounds(0, 0, 1097, 40);
 
         jTextPane_Code.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jTextPane_Code.setText("/*SAMPLE PROGRAM*/\nDECLARE {\n\tINT IDI1;\n\tINT IDI2;\n\tint idi3;\n\tSTRING IDS1;\n\tSTRING IDS2;\n\tSTRING IDS3;\n\tString Saludo;\n\tBOOLEAN IDB1 ;\n}\n\nMAIN {\n\tIDI1=4+(3+4)-6+(5-5);\n\tIDS1 = \"MI\"; \n\tIDS2 = \" PRIMER\";\n\tIDS3= \"HOLA\"+\"MUNDO\";\n\tIDB1 = TRUE ;\n\tSaludo = IDS1 + IDS2 + IDS3;\n\tARRAYSTRING ID5 = NEW [ \"ING\",\"ARQ\",\"BIO\",\"CIVIL\",\"MECATRONICA\"] ;\n\tFEATURES ID4 = NEW FEATURES ( 19,2,3,4,50,6,40,80,9,10,11,12,13,14,115,16,1,18,19,20,21) ;\n\tFEATURES ID6 = NEW FEATURES ( 11,20,3,4,5,6,7,50,9,10,11,12,13,14,15,16,137,18,19,20,11) ;\n\tGROUP ID2 = NEW GROUP (ID4, MAX, ID5);\n\tNODE S = NEW NODE (ID4,\"Mariela\",\"ING\");\n\tNODE id = NEW NODE (ID6,\"Cesar\",\"BIO\");\n\tNODE id1 = NEW NODE (ID4,\"Ernesto\",\"CIVIL\");\n\tIDI1 = GETFEATURES (S.ANXIETY);\n\tGENERATEGROUP (ID2);\n\tIF (10<((5 - 4)+(6+2))){\n\t\tPRINTGRAPH (ID2);\t\n\t\tPRINTLN (\"Parte\"+\"if\"+\"verdadero\");\n\t\tIF (TRUE && IDB1 %% (5<2) ){\n\t\t\tIDI2 = GETSIMILITUDE(s,ID);\n\t\t}\n\t\t\n\t\tELSE {\n\t\t\tIDI2 = GETSIMILITUDE(ID,ID1);\n\t\t}\n\t       PRINTLN (\"Parte\"+\"fuera\"+\"del\"+\"if\");\n\t}ELSE {\n\t\tPRINTLN (\"A\");\n\t\tID31 = GETFEATURES (S.ANXIETY);\n\t}\n\tLOOP ((10 < (5-2)) && TRUE ){\n\tARRAYSTRING ID10 = NEW [ \"PROGRAMADOR\",\"ADMINISTRADOR\",\"ING REDES\",\"LIDER\",\"DISENADOR\"] ;\n\tFEATURES ID7 = NEW FEATURES ( 11,20,3,4,5,6,7,50,9,10,11,12,13,14,15,16,137,18,19,20,11) ;\n\tGROUP ID22 = NEW GROUP (ID7, MAX, ID10);\n\t}\n\tPRINTLN (\"FIN\"+\"DE\"+\"PROGRAMA\");\n}");
+        jTextPane_Code.setText("/*SAMPLE PROGRAM*/\nDECLARE {\n\tINT IDI1;\n\tINT IDI2;\n\tint IDI3;\n\tSTRING IDS1;\n\tSTRING IDS2;\n\tSTRING IDS3;\n\tString Saludo;\n\tBOOLEAN IDB1 ;\n}\n\nMAIN {\n\tIDI1 = 4 + (3 + 4) - 6 + (5 - 5);\n\tIDS1 = \"MI\"; \n\tIDS2 = \" PRIMER\";\n\tIDS3= \"HOLA\" + \"MUNDO\";\n\tIDB1 = TRUE ;\n\tSaludo = IDS1 + IDS2 + IDS3;\n\tARRAYSTRING ID5 = NEW [ \"ING \",\"ARQ\",\"BIO\",\"CIVIL\",\"MECATRONICA\"] ;\n\tFEATURES ID4 = NEW FEATURES ( 19,2,3,4,50,6,40,80,9,10,11,12,13,14,115,16,1,18,19,20,21) ;\n\tFEATURES ID6 = NEW FEATURES ( 11,20,3,4,5,6,7,50,9,10,11,12,13,14,15,16,137,18,19,20,11) ;\n\tGROUP ID2 = NEW GROUP (ID4, MAX, ID5);\n\tNODE S = NEW NODE (ID4,\"Mariela\",\"ING\");\n\tNODE id = NEW NODE (ID6,\"Cesar\",\"BIO\");\n\tNODE id1 = NEW NODE (ID4,\"Ernesto\",\"CIVIL\");\n\tIDI1 = GETFEATURES (S.ANXIETY);\n\tGENERATEGROUP (ID2);\n\tIF (10 < ((5 - 4) + (6 + 2))){\n\t\tPRINTGRAPH (ID2);\t\n\t\tPRINTLN (\"Parte\" + \"if\" + \"verdadero\");\n\t\tIF (TRUE && IDB1 %% (5 < 2) ){\n\t\t\tIDI2 = GETSIMILITUDE(s,ID);\n\t\t}\n\t\t\n\t\tELSE {\n\t\t\tIDI2 = GETSIMILITUDE(ID,ID1);\n\t\t}\n\t       PRINTLN (\"Parte\" + \"fuera\" + \"del\" + \"if\");\n\t}ELSE {\n\t\tPRINTLN (\"A\");\n\t\tID31 = GETFEATURES (S.ANXIETY);\n\t}\n\tLOOP ((10 < (5 - 2)) && TRUE ){\n\tARRAYSTRING ID10 = NEW [ \"PROGRAMADOR\",\"ADMINISTRADOR\",\"ING REDES\",\"LIDER\",\"DISENADOR\"] ;\n\tFEATURES ID7 = NEW FEATURES ( 11,20,3,4,5,6,7,50,9,10,11,12,13,14,15,16,137,18,19,20,11) ;\n\tGROUP ID22 = NEW GROUP (ID7, MAX, ID10);\n\t}\n\tPRINTLN (\"FIN\" + \"DE\" + \"PROGRAMA\");\n}");
         jTextPane_Code.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextPane_CodeKeyReleased(evt);
@@ -664,6 +665,7 @@ public class FCompiler extends javax.swing.JFrame {
                 tln.setForeground(Color.DARK_GRAY);
                 tln.setCurrentLineForeground(color4);
                 jScrollPane1.setRowHeaderView(tln);
+                ci.cambiarColores(color1, color2);
                 //jPanel1.setBackground(color3);
                 break;
             case 5:
@@ -679,7 +681,6 @@ public class FCompiler extends javax.swing.JFrame {
                 nuevo();
                 break;
             case 2:
-                System.out.print(undo.size());
                 if(undo.size()>1){
                     
                     redo.add(undo.get(undo.size()-1));
@@ -729,6 +730,7 @@ public class FCompiler extends javax.swing.JFrame {
                 tln.setForeground(Color.gray);
                 jScrollPane1.setRowHeaderView(tln);
                 tln.setCurrentLineForeground(color4);
+                ci.cambiarColores(color1, color2);
                 break;
             case 5:
                 AcercaD v = new AcercaD(this,true);
@@ -792,6 +794,7 @@ public class FCompiler extends javax.swing.JFrame {
                 tln.setForeground(Color.gray);
                 tln.setCurrentLineForeground(color4);
                 jScrollPane1.setRowHeaderView(tln);
+                ci.cambiarColores(color1, color2);
                 break;
             case 5: enlace("http://gplus1.esy.es");
                 break;     
@@ -818,7 +821,7 @@ public class FCompiler extends javax.swing.JFrame {
                 String s = jTextPane_Code.getText();
                 textoCopiado = s.substring( inicio , fin );
                 break;
-            case 3: System.out.println(jTextPane_Code.getCaretPosition()    );
+            case 3: 
                 break;
             case 4:
                 color1 = new Color(41,85,72);
@@ -842,6 +845,7 @@ public class FCompiler extends javax.swing.JFrame {
                 tln.setForeground(Color.gray);
                 tln.setCurrentLineForeground(color4);
                 jScrollPane1.setRowHeaderView(tln);
+                ci.cambiarColores(color1, color2);
                 
                 break;
             case 5:
@@ -889,6 +893,7 @@ public class FCompiler extends javax.swing.JFrame {
                 tln.setForeground(Color.DARK_GRAY);
                 tln.setCurrentLineForeground(color4);
                 jScrollPane1.setRowHeaderView(tln);
+                ci.cambiarColores(color1, color2);
                 break;
             case 5:
                 break;   
@@ -932,7 +937,6 @@ public class FCompiler extends javax.swing.JFrame {
              String codigo=jTextPane_Code.getText();
              //Convertimos el codigo a mayúscula para que esté uniforme
              codigo=codigo;
-             System.out.println(codigo);
             
             //Se guarda el codigo en el archivo code.txt
             File archivo = new File(nombreArchivo);
@@ -963,7 +967,6 @@ public class FCompiler extends javax.swing.JFrame {
             }
             catch(IOException io)
             {
-                  System.out.println("Error opening file");
                   return;
             }
  
@@ -1139,7 +1142,6 @@ public class FCompiler extends javax.swing.JFrame {
                 if(manejadorErrores.size()==0){
                     
                     intermedio();
-                    System.out.println("estoy en el cup del intermedio");
                     if(manejadorErrores_intermedio.size()==0){
                        jTextPane_Output.setForeground(new Color(102,123,57));
                        jTextPane_Output.setText("BUILD SUCCESSFUL");
@@ -1231,7 +1233,6 @@ public class FCompiler extends javax.swing.JFrame {
             Logger.getLogger(FCompiler.class.getName()).log(Level.SEVERE, null, ex);
         }
         if(!parser.ManejadorDeErrores.isEmpty()){
-            System.out.println(parser.ManejadorDeErrores.get(0).toString());
         this.manejadorErrores.addAll(parser.ManejadorDeErrores);
         }
     }
@@ -1249,7 +1250,6 @@ public class FCompiler extends javax.swing.JFrame {
             Logger.getLogger(FCompiler.class.getName()).log(Level.SEVERE, null, ex);
         }
         if(!parser.ManejadorDeErrores.isEmpty()){
-            System.out.println(parser.ManejadorDeErrores.get(0).toString());
         this.manejadorErrores.addAll(parser.ManejadorDeErrores);
         }
     }
@@ -1289,10 +1289,8 @@ public class FCompiler extends javax.swing.JFrame {
             if(cadena.indexOf("/*", posicion) <= cadena.indexOf("*/", posicion+2)){
                 
                 palabras.add(cadena.substring(cadena.indexOf("/*",posicion), cadena.indexOf("*/",posicion+2)+2));
-                System.out.println(cadena.substring(cadena.indexOf("/*",posicion), cadena.indexOf("*/",posicion+2)+2));
             }else {
                 palabras.add(cadena.substring(cadena.indexOf("/*",posicion)));
-                System.out.println(cadena.substring(cadena.indexOf("/*",posicion)));
             }
             colores.add(new Color(104,113,94));
             posicion = cadena.indexOf("/*", posicion+1);
@@ -1346,7 +1344,7 @@ public class FCompiler extends javax.swing.JFrame {
         palabras.add("BOOLEAN"); colores.add(cData);
         
         //Operadores
-        palabras.add("+"); colores.add(cParam);
+        palabras.add("+"); colores.add(cOP);
         palabras.add("="); colores.add(cParam);
         palabras.add("=="); colores.add(cParam);
         palabras.add("<"); colores.add(cParam);
@@ -1354,7 +1352,7 @@ public class FCompiler extends javax.swing.JFrame {
         palabras.add("<="); colores.add(cParam);
         palabras.add(">="); colores.add(cParam);
         palabras.add("!="); colores.add(cParam);
-        palabras.add("-"); colores.add(cParam);
+        palabras.add("-"); colores.add(cOP);
         palabras.add("&&"); colores.add(cParam);
         palabras.add("%%"); colores.add(cParam);
         palabras.add("NOT"); colores.add(cParam);
@@ -1391,6 +1389,8 @@ public class FCompiler extends javax.swing.JFrame {
        palabras.add("READFEATVAL"); colores.add(cClass);
        palabras.add("READSTRING"); colores.add(cClass);
        palabras.add("GETSIMILITUDE"); colores.add(cClass);
+       
+       
 
         
     }

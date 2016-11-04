@@ -475,6 +475,7 @@ public class ElegirColor extends javax.swing.JDialog {
             padre.color3=c3;
             padre.color4=c4;
             padre.CambiarC();
+            padre.ci.cambiarColores(c1, c2);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked

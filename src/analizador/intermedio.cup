@@ -55,7 +55,6 @@ parser code {:
     String codigo="";
     switch(tipo){
         case "PRINTLN":
-            System.out.println("Entro a imprimir");        
                 codigo = Generador.gc(Generador.PRINTLN, null, null, op2);     
             break;
         case "ADD_OP": 
@@ -109,7 +108,6 @@ parser code {:
             break;
         case "READ":
             t = Generador.nuevaTemp();
-            System.out.println("estoy evaluando el tipo de recibir que se hara"+ tipoPrint);
             if(tipoPrint==1){
             codigo = Generador.gc(Generador.READSTRING, null, null, op2);}
             else{
@@ -383,12 +381,10 @@ EXPNUM ::= T:e1 {:
         RESULT = e1;
 :} 
 | EXPNUM:e1 SUBS_OP:E  T:e2 {:
-    System.out.println("ESTO ES LA PRUEBA DEL MENOS INTERMEDIO"+E);
     RESULT = parser.generar("SUBS_OPP", e1.toString(), e2.toString());  
     :}
 
 | EXPNUM :e1 ADD_OP:E  T:e2 {:
-       System.out.println("ESTO ES LA PRUEBA DEL MAS INTERMEDIO"+E);
     RESULT = parser.generar("ADD_OP", e1.toString(), e2.toString());
     :} 
 |error:e ADD_OP T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+".")); :}
@@ -444,7 +440,6 @@ FCompiler.codigointermedio += Generador.gc(Generador.ASIG,d.toString(),null,"@"+
 ARRAYSTRING_STR ::=  ARRAYSTRING ID:val ASSIG_OP NEW BRACKET1 ARRAYVAL:e BRACKET2 SEMICOLON_SIGN{:
 if(val!=null){
 String valores[]=e.toString().split(",");
-System.out.println("tamaño"+valores.length);
     for(int f=0; f<=valores.length-1;f++){
        FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[f]+"",null,"@"+val+".["+f+"]"); 
     }
@@ -616,7 +611,6 @@ CTRL_STR ::=  LOOP_STR | IF_STR:i;
 IF_STR ::= IFAUX:ett PARENTH1 COND:lo PARENTH2 {:
     String codigo = Generador.gc(Generador.IF,lo.toString(),"false",((EtiqRedir)(ett)).ini());
     FCompiler.codigointermedio += codigo;
-    System.out.println("ESTOy creando el if con el generador");
 :} CURLY_BR1 BODY {:
     String codigo = Generador.gc(Generador.LABEL,null,null,((EtiqRedir)(ett)).ini());
     FCompiler.codigointermedio += codigo;
@@ -633,7 +627,6 @@ IF_STR ::= IFAUX:ett PARENTH1 COND:lo PARENTH2 {:
 IFAUX::= IF {:
     String ini = Generador.nuevaEtiq();
     String fin = Generador.nuevaEtiq();
-    System.out.println("ESTOy en el if aux"+ini+" etiquetia" +fin);
     RESULT = new EtiqRedir(ini,fin);
 :};
 
@@ -652,6 +645,5 @@ LOOP_STR ::= LOOPAUX:et PARENTH1 {:
 LOOPAUX ::= LOOP {:
     String ini = Generador.nuevaEtiq();
     String fin = Generador.nuevaEtiq();
-    System.out.println("ESTOY en el if aux"+ini+" etiquetia" +fin);
     RESULT = new EtiqRedir(ini,fin);
 :};

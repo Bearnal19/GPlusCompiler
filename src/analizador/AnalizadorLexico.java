@@ -68,45 +68,45 @@ public class AnalizadorLexico implements java_cup.runtime.Scanner {
     "\1\0\1\1\1\2\1\3\1\4\1\1\1\5\3\1"+
     "\10\2\1\1\11\2\1\6\1\7\1\10\1\11\1\12"+
     "\1\13\1\14\1\15\1\16\3\1\1\17\1\20\1\21"+
-    "\1\22\1\23\2\0\1\24\1\0\1\25\1\2\1\25"+
-    "\5\2\1\0\10\2\4\0\20\2\1\0\2\2\1\26"+
-    "\1\27\1\30\1\31\1\32\1\33\1\23\1\0\1\24"+
-    "\1\34\1\0\1\34\1\2\1\35\1\2\1\36\3\2"+
+    "\1\22\1\4\2\0\1\23\1\0\1\24\1\2\1\24"+
+    "\5\2\1\0\10\2\4\0\20\2\1\0\2\2\1\25"+
+    "\1\26\1\27\1\30\1\31\1\32\1\4\1\0\1\23"+
+    "\1\33\1\0\1\33\1\2\1\34\1\2\1\35\3\2"+
     "\1\0\2\2\1\0\2\2\1\0\4\2\6\0\16\2"+
-    "\1\0\5\2\2\37\1\0\1\2\1\40\1\0\1\2"+
-    "\1\41\1\42\2\2\1\0\1\2\1\43\2\44\1\0"+
+    "\1\0\5\2\2\36\1\0\1\2\1\37\1\0\1\2"+
+    "\1\40\1\41\2\2\1\0\1\2\1\42\2\43\1\0"+
     "\1\2\1\0\4\2\7\0\7\2\1\0\3\2\1\0"+
-    "\5\2\1\0\2\2\2\0\3\2\1\0\2\2\1\45"+
-    "\2\46\1\0\3\2\1\0\1\2\1\0\1\2\1\0"+
+    "\5\2\1\0\2\2\2\0\3\2\1\0\2\2\1\44"+
+    "\2\45\1\0\3\2\1\0\1\2\1\0\1\2\1\0"+
     "\4\2\10\0\10\2\1\0\1\2\1\0\3\2\1\0"+
-    "\2\2\1\47\2\2\2\50\1\2\2\0\3\2\1\0"+
+    "\2\2\1\46\2\2\2\47\1\2\2\0\3\2\1\0"+
     "\2\2\1\0\3\2\1\0\1\2\1\0\1\2\1\0"+
-    "\1\2\1\0\1\2\1\0\2\2\1\0\1\51\1\52"+
-    "\5\0\1\2\1\51\1\52\5\2\1\0\1\2\1\0"+
+    "\1\2\1\0\1\2\1\0\2\2\1\0\1\50\1\51"+
+    "\5\0\1\2\1\50\1\51\5\2\1\0\1\2\1\0"+
     "\3\2\1\0\5\2\3\0\4\2\1\0\2\2\1\0"+
-    "\1\2\1\53\1\0\1\2\1\0\1\2\2\54\1\0"+
+    "\1\2\1\52\1\0\1\2\1\0\1\2\2\53\1\0"+
     "\1\2\1\0\1\2\1\0\2\2\6\0\6\2\1\0"+
-    "\1\2\1\0\3\2\1\0\2\2\1\0\3\2\1\55"+
-    "\1\0\1\56\1\55\1\2\1\56\1\0\1\2\1\0"+
-    "\1\2\1\57\1\0\1\2\1\0\1\2\1\0\1\2"+
+    "\1\2\1\0\3\2\1\0\2\2\1\0\3\2\1\54"+
+    "\1\0\1\55\1\54\1\2\1\55\1\0\1\2\1\0"+
+    "\1\2\1\56\1\0\1\2\1\0\1\2\1\0\1\2"+
     "\1\0\1\2\1\0\1\2\1\0\2\2\6\0\6\2"+
     "\1\0\1\2\1\0\3\2\1\0\2\2\1\0\1\2"+
-    "\2\60\1\0\1\2\1\0\1\2\2\61\1\0\1\2"+
+    "\2\57\1\0\1\2\1\0\1\2\2\60\1\0\1\2"+
     "\1\0\1\2\1\0\1\2\1\0\1\2\1\0\1\2"+
-    "\1\0\1\2\1\0\1\2\1\0\1\2\1\62\5\0"+
-    "\1\62\5\2\2\63\1\0\3\2\1\0\2\2\1\0"+
-    "\1\2\1\0\1\2\1\0\1\2\2\64\1\0\1\2"+
-    "\1\0\1\2\2\65\1\0\1\2\1\0\1\2\2\66"+
-    "\1\0\1\2\5\0\5\2\2\67\2\2\1\0\2\2"+
-    "\1\0\1\2\1\0\1\2\2\70\1\0\1\2\1\0"+
-    "\1\2\2\71\2\72\1\0\1\2\1\73\1\74\1\0"+
-    "\1\75\1\0\1\73\1\74\1\2\1\75\1\2\1\76"+
-    "\1\2\1\0\1\2\2\77\1\0\1\2\1\0\1\2"+
-    "\2\100\1\0\1\2\2\101\1\0\1\102\1\2\1\102"+
+    "\1\0\1\2\1\0\1\2\1\0\1\2\1\61\5\0"+
+    "\1\61\5\2\2\62\1\0\3\2\1\0\2\2\1\0"+
+    "\1\2\1\0\1\2\1\0\1\2\2\63\1\0\1\2"+
+    "\1\0\1\2\2\64\1\0\1\2\1\0\1\2\2\65"+
+    "\1\0\1\2\5\0\5\2\2\66\2\2\1\0\2\2"+
+    "\1\0\1\2\1\0\1\2\2\67\1\0\1\2\1\0"+
+    "\1\2\2\70\2\71\1\0\1\2\1\72\1\73\1\0"+
+    "\1\74\1\0\1\72\1\73\1\2\1\74\1\2\1\75"+
+    "\1\2\1\0\1\2\2\76\1\0\1\2\1\0\1\2"+
+    "\2\77\1\0\1\2\2\100\1\0\1\101\1\2\1\101"+
     "\1\2\1\0\1\2\1\0\1\2\1\0\1\2\1\0"+
-    "\1\2\1\0\1\2\1\103\2\104\1\0\1\2\2\105"+
+    "\1\2\1\0\1\2\1\102\2\103\1\0\1\2\2\104"+
     "\1\0\1\2\1\0\1\2\1\0\1\2\1\0\1\2"+
-    "\2\106\2\107\2\110";
+    "\2\105\2\106\2\107";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[561];
@@ -1349,361 +1349,356 @@ contador=0;
             { ManejadorDeErrores.add(new Error1("Lexico",yyline,yycolumn,yytext()));
 return symbol(sym.ERRORLEX,yytext());
             }
-          case 73: break;
+          case 72: break;
           case 2: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext()+" ID")); 
 return symbol(sym.ID,yytext());
             }
-          case 74: break;
+          case 73: break;
           case 3: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.NUM,new Integer(yytext()));
             }
-          case 75: break;
+          case 74: break;
           case 4: 
             { /*IGNORE*/
             }
-          case 76: break;
+          case 75: break;
           case 5: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.COMMA_SIGN,yytext());
             }
-          case 77: break;
+          case 76: break;
           case 6: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ASSIG_OP,yytext());
             }
-          case 78: break;
+          case 77: break;
           case 7: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.PARENTH1,yytext());
             }
-          case 79: break;
+          case 78: break;
           case 8: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.PARENTH2,yytext());
             }
-          case 80: break;
+          case 79: break;
           case 9: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.CURLY_BR1,yytext());
             }
-          case 81: break;
+          case 80: break;
           case 10: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.CURLY_BR2,yytext());
             }
-          case 82: break;
+          case 81: break;
           case 11: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.BRACKET1,yytext());
             }
-          case 83: break;
+          case 82: break;
           case 12: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.BRACKET2,yytext());
             }
-          case 84: break;
+          case 83: break;
           case 13: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.GREATER_OP,yytext());
             }
-          case 85: break;
+          case 84: break;
           case 14: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.LESS_OP,yytext());
             }
-          case 86: break;
+          case 85: break;
           case 15: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ADD_OP,yytext());
             }
-          case 87: break;
+          case 86: break;
           case 16: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SUBS_OP,yytext());
             }
-          case 88: break;
+          case 87: break;
           case 17: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SEMICOLON_SIGN,yytext());
             }
-          case 89: break;
+          case 88: break;
           case 18: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.POINT_SIGN,yytext());
             }
-          case 90: break;
+          case 89: break;
           case 19: 
-            { System.out.println("Comentario de una linea"); /*IGNORE*/
-            }
-          case 91: break;
-          case 20: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.STRING,yytext());
             }
-          case 92: break;
-          case 21: 
+          case 90: break;
+          case 20: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.IF,yytext());
             }
-          case 93: break;
-          case 22: 
+          case 91: break;
+          case 21: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.EQUAL_OP,yytext());
             }
-          case 94: break;
-          case 23: 
+          case 92: break;
+          case 22: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.GREATER_EQUAL_OP,yytext());
             }
-          case 95: break;
-          case 24: 
+          case 93: break;
+          case 23: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.LESS_EQUAL_OP,yytext());
             }
-          case 96: break;
-          case 25: 
+          case 94: break;
+          case 24: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.NOT_EQUAL_OP,yytext());
             }
-          case 97: break;
-          case 26: 
+          case 95: break;
+          case 25: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.AND_OP,yytext());
             }
-          case 98: break;
-          case 27: 
-            { System.out.println("OR_OP "+yytext());
-TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
+          case 96: break;
+          case 26: 
+            { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.OR_OP,yytext());
             }
-          case 99: break;
-          case 28: 
+          case 97: break;
+          case 27: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.INT_WORD,yytext());
             }
-          case 100: break;
-          case 29: 
+          case 98: break;
+          case 28: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.NOT,yytext());
             }
-          case 101: break;
-          case 30: 
+          case 99: break;
+          case 29: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.NEW,yytext());
             }
-          case 102: break;
-          case 31: 
+          case 100: break;
+          case 30: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.MIN,yytext());
             }
-          case 103: break;
-          case 32: 
+          case 101: break;
+          case 31: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.MAX,yytext());
             }
-          case 104: break;
-          case 33: 
+          case 102: break;
+          case 32: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.NODE,yytext());
             }
-          case 105: break;
-          case 34: 
+          case 103: break;
+          case 33: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.TRUE,yytext());
             }
-          case 106: break;
-          case 35: 
+          case 104: break;
+          case 34: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.LOOP,yytext());
             }
-          case 107: break;
-          case 36: 
+          case 105: break;
+          case 35: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ELSE,yytext());
             }
-          case 108: break;
-          case 37: 
+          case 106: break;
+          case 36: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.DARE,yytext());
             }
-          case 109: break;
-          case 38: 
+          case 107: break;
+          case 37: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.MAIN,yytext());
             }
-          case 110: break;
-          case 39: 
+          case 108: break;
+          case 38: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.GROUP,yytext());
             }
-          case 111: break;
-          case 40: 
+          case 109: break;
+          case 39: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.FALSE,yytext());
             }
-          case 112: break;
-          case 41: 
+          case 110: break;
+          case 40: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.STRING_WORD,yytext());
             }
-          case 113: break;
-          case 42: 
+          case 111: break;
+          case 41: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.STRESS,yytext());
             }
-          case 114: break;
-          case 43: 
+          case 112: break;
+          case 42: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.BOOLEAN_WORD,yytext());
             }
-          case 115: break;
-          case 44: 
+          case 113: break;
+          case 43: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ANXIETY,yytext());
             }
-          case 116: break;
-          case 45: 
+          case 114: break;
+          case 44: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.PRINTLN,yytext());
             }
-          case 117: break;
-          case 46: 
+          case 115: break;
+          case 45: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.PRIVACY,yytext());
             }
-          case 118: break;
-          case 47: 
+          case 116: break;
+          case 46: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.DECLARE,yytext());
             }
-          case 119: break;
-          case 48: 
+          case 117: break;
+          case 47: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.FEATURES,yytext());
             }
-          case 120: break;
-          case 49: 
+          case 118: break;
+          case 48: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.HARDNESS,yytext());
             }
-          case 121: break;
-          case 50: 
+          case 119: break;
+          case 49: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.STABILITY,yytext());
             }
-          case 122: break;
-          case 51: 
+          case 120: break;
+          case 50: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.REASONING,yytext());
             }
-          case 123: break;
-          case 52: 
+          case 121: break;
+          case 51: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.DOMINANCE,yytext());
             }
-          case 124: break;
-          case 53: 
+          case 122: break;
+          case 52: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.LIVELINESS,yytext());
             }
-          case 125: break;
-          case 54: 
+          case 123: break;
+          case 53: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.AFFABILITY,yytext());
             }
-          case 126: break;
-          case 55: 
+          case 124: break;
+          case 54: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.READSTRING,yytext());
             }
-          case 127: break;
-          case 56: 
+          case 125: break;
+          case 55: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.PRINTGRAPH,yytext());
             }
-          case 128: break;
-          case 57: 
+          case 126: break;
+          case 56: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ABSTRACTION,yytext());
             }
-          case 129: break;
-          case 58: 
+          case 127: break;
+          case 57: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.ARRAYSTRING,yytext());
             }
-          case 130: break;
-          case 59: 
+          case 128: break;
+          case 58: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SOCIABILITY,yytext());
             }
-          case 131: break;
-          case 60: 
+          case 129: break;
+          case 59: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SENSITIVITY,yytext());
             }
-          case 132: break;
-          case 61: 
+          case 130: break;
+          case 60: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SELFCONTROL,yytext());
             }
-          case 133: break;
-          case 62: 
+          case 131: break;
+          case 61: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.READFEATVAL,yytext());
             }
-          case 134: break;
-          case 63: 
+          case 132: break;
+          case 62: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.GETFEATURES,yytext());
             }
-          case 135: break;
-          case 64: 
+          case 133: break;
+          case 63: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.INDEPENDENCE,yytext());
             }
-          case 136: break;
-          case 65: 
+          case 134: break;
+          case 64: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.APPREHESION,yytext());
             }
-          case 137: break;
-          case 66: 
+          case 135: break;
+          case 65: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SURVEILLANCE,yytext());
             }
-          case 138: break;
-          case 67: 
+          case 136: break;
+          case 66: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.GENERATEGROUP,yytext());
             }
-          case 139: break;
-          case 68: 
+          case 137: break;
+          case 67: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.GETSIMILITUDE,yytext());
             }
-          case 140: break;
-          case 69: 
+          case 138: break;
+          case 68: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.PERFECTIONISM,yytext());
             }
-          case 141: break;
-          case 70: 
+          case 139: break;
+          case 69: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.SELFSUFFICIENCY,yytext());
             }
-          case 142: break;
-          case 71: 
+          case 140: break;
+          case 70: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.CARETOSTANDARDS,yytext());
             }
-          case 143: break;
-          case 72: 
+          case 141: break;
+          case 71: 
             { TablaSimbolos.add(new entradaTS(yyline, yycolumn, contador++, yytext())); 
 return symbol(sym.OPENNESSTOCHANGE,yytext());
             }
-          case 144: break;
+          case 142: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }
