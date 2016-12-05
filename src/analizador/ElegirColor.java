@@ -476,36 +476,37 @@ public class ElegirColor extends javax.swing.JDialog {
             padre.color4=c4;
             padre.CambiarC();
             padre.ci.cambiarColores(c1, c2);
+            padre.co.cambiarColores(c1, c2);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        this.dispose();        // TODO add your handling code here:
+        this.dispose();        
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseEntered
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz2.png")));        // TODO add your handling code here:
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz2.png")));       
     }//GEN-LAST:event_jLabel1MouseEntered
 
     private void jLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseExited
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz.png")));        // TODO add your handling code here:
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz.png")));        
     }//GEN-LAST:event_jLabel1MouseExited
 
     private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz.png")));        // TODO add your handling code here:
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz.png")));        
     }//GEN-LAST:event_jLabel1MousePressed
 
     private void jLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseReleased
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz2.png")));        // TODO add your handling code here:
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cruz2.png")));        
     }//GEN-LAST:event_jLabel1MouseReleased
 
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
         x=evt.getX();
-        y=evt.getY();        // TODO add your handling code here:
+        y=evt.getY();        
     }//GEN-LAST:event_jPanel1MousePressed
 
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
         Point p = MouseInfo.getPointerInfo().getLocation();
-        this.setLocation(p.x-x,p.y-y);        // TODO add your handling code here:
+        this.setLocation(p.x-x,p.y-y);        
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked

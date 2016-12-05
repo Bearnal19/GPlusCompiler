@@ -1,0 +1,649 @@
+/* ---------------Seccion de declaraciones preliminares--------------------*/
+package analizador;
+
+/* -------------Importaciones -------------  */
+import java.io.*;
+import java.lang.*;
+import java_cup.runtime.*;
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.*;
+
+
+
+/***********ACTION CODE***********/
+action code{:
+void print(String msj)
+   {System.out.println(msj);}
+:}
+/* Codigo del parser, se copia integramente a la clase final. Agregamos el manejo de errores. */
+
+/**********PARSER CODE***********/
+parser code {:
+    
+    boolean esId;
+    String tipoActual;
+    String salidaTipoActual;
+    Object valorActual;
+    String valorActualTipo;
+    String iniet;
+    String finet;
+    String fil,col;
+    ArrayList<Error1> ManejadorDeErrores;
+    EtiqRedir manejadoretiquetas;
+    int fl;
+    int op_relacional=0;
+    int op_log=0;
+    int tipoPrint=0;
+    boolean esDAssig=false;
+
+    public String generarSinTemp(String tipo, String op1,String op2){
+    String codigo="";
+    switch(tipo){
+        case "ASIG": 
+            codigo = Generador.gc(Generador.ASIG, op1, null, op2);
+            break;
+
+        }
+        FCompiler.codigointermedio += codigo; 
+        return op2;
+    }
+    
+    public String generar(String tipo, String op1,String op2){
+    String t="";
+    String t2="";
+    String codigo="";
+    switch(tipo){
+        case "PRINTLN":
+                codigo = Generador.gc(Generador.PRINTLN, null, null, op2);     
+            break;
+        case "ADD_OP": 
+            t = Generador.nuevaTemp();
+            codigo = Generador.gc(Generador.ADD_OP, op1, op2, t);
+            break;
+        case "SUBS_OPP": 
+            t = Generador.nuevaTemp();
+            codigo = Generador.gc(Generador.SUBS_OPP, op1, op2, t);
+            break;
+        case "OP_REL":
+            switch(op_relacional){
+                case 6: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.GREATER_OP, op1, op2, t);
+                    break;
+                case 2: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.GREATER_EQUAL_OP, op1, op2, t);
+                    break;
+                case 1: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.EQUAL_OP, op1, op2, t);
+                    break;
+                case 3: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.LESS_EQUAL_OP, op1, op2, t);
+                    break;
+                case 5: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.LESS_OP, op1, op2, t);
+                    break;
+                case 4: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.NOT_EQUAL_OP, op1, op2, t);
+                    break;
+                }
+            break;
+            
+        case "OP_LOG":
+            switch(op_log){
+                case 1: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.AND, op1, op2, t);
+                    break;
+                case 2: 
+                    t = Generador.nuevaTemp();
+                    codigo = Generador.gc(Generador.OR, op1, op2, t);
+                    break;
+                }
+            break;
+        case "READ":
+            t = Generador.nuevaTemp();
+            if(tipoPrint==1){
+            codigo = Generador.gc(Generador.READSTRING, null, null, op2);}
+            else{
+                codigo = Generador.gc(Generador.READFEATVAL, null, null, op2);    
+            }
+            //codigo += Generador.gc(Generador.ASIG, op1, null, t);
+            break;
+        case "GETFEATURES":
+            codigo = Generador.gc(Generador.GETFEATURES, null, null, op2);
+            break;
+            
+       /* case "RECIBIR":
+            codigo = Generador.gc(Generador.RECIBIR, null, null, op2);
+            break;
+        case "RECIBIR2":
+            t = Generador.nuevaTemp();
+            if(tipoPrint==0){
+            codigo = Generador.gc(Generador.RECIBIR, null, null, op1);}
+            else{
+                if(tipoPrint==2){codigo = Generador.gc(Generador.RECIBIR3, null, null, op1);//Impresion de string
+                    }else{
+                codigo = Generador.gc(Generador.RECIBIR2, null, null, op1);
+                }
+            }
+            codigo += Generador.gc(Generador.ASIG, op1, null, t);
+            break;
+        case "INCMAS":
+              t = Generador.nuevaTemp();
+              t2 = Generador.nuevaTemp();
+            codigo = Generador.gc(Generador.ASIG, op1, null, t);
+            codigo += Generador.gc(Generador.MAS, t, "1", t2);
+            codigo += Generador.gc(Generador.ASIG, t2, null, op1);
+            break;
+        case "INCMENOS":
+            t = Generador.nuevaTemp();
+            t2 = Generador.nuevaTemp();
+            codigo = Generador.gc(Generador.ASIG, op1, null, t);
+            codigo += Generador.gc(Generador.MENOS, t, "1", t2);
+            codigo += Generador.gc(Generador.ASIG, t2, null, op1);
+            break;
+        
+        
+        
+        case "ASIG": 
+            t = Generador.nuevaTemp();
+            codigo = Generador.gc(Generador.ASIG, op1, op2, t);
+            break;
+        case "ASIG_DSC": 
+            t = Generador.nuevaTemp();
+            codigo = Generador.gc(Generador.ASIG, op1, null, t);
+            break;*/
+        }
+    FCompiler.codigointermedio += codigo; 
+    return t;
+    }
+
+    public Intermedio(java_cup.runtime.Scanner s,ArrayList<Error1> m,int fdl) {
+        super(s); 
+        ManejadorDeErrores = m;
+        fl = fdl;
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        report_error("No se encontró ;",s);
+
+    }
+
+    public void syntax_error(Symbol s){
+        //report_error("Sintactico",s);
+    }
+
+    public void report_error(String message, Object info){
+        if(info!=null){
+            java_cup.runtime.Symbol s =(java_cup.runtime.Symbol)info;
+            String valor="";
+            if(s.value!=null){
+                valor = s.value.toString();
+            }
+        ManejadorDeErrores.add(new Error1(message,s.left,s.right,valor));
+        }else{
+            ManejadorDeErrores.add(new Error1(message,-1,-1,"?????"));
+        }
+    }
+
+:};
+   
+  
+/* ------------Declaracion de simbolos terminales y no terminales---------- */
+   
+/* Terminales (tokens obtenidos por el analizador lexico).  
+
+   Terminales que no tienen un valor son listados primero, los terminales que
+   tienen un valor como los enteros son listados en la segunda o demas lineas. */
+
+terminal        DECLARE,CURLY_BR1,CURLY_BR2,SEMICOLON_SIGN,MAIN,ASSIG_OP,PARENTH1,PARENTH2,
+                NOT,AND_OP,OR_OP,EQUAL_OP,GREATER_EQUAL_OP,LESS_EQUAL_OP,NOT_EQUAL_OP,LESS_OP,GREATER_OP,
+                ADD_OP,SUBS_OP,STRING_WORD,INT_WORD,BOOLEAN_WORD,GROUP,NEW,COMMA_SIGN,MAX,MIN,NODE,FEATURES,
+                BRACKET1,BRACKET2,IF,ELSE,LOOP,READFEATVAL,TRUE,FALSE,READSTRING,GENERATEGROUP,PRINTGRAPH,
+                GETSIMILITUDE,GETFEATURES,ABSTRACTION,AFFABILITY,APPREHESION,ANXIETY,CARETOSTANDARDS,
+                DARE,DOMINANCE,HARDNESS,INDEPENDENCE,SELFCONTROL,SELFSUFFICIENCY,SENSITIVITY,SOCIABILITY,STABILITY,
+                STRESS,SURVEILLANCE,POINT_SIGN,ARRAYSTRING,PRINTLN,LIVELINESS,OPENNESSTOCHANGE,PERFECTIONISM,PRIVACY,
+                REASONING,ERRORLEX;
+
+terminal String  ID,STRING;
+terminal Integer NUM;
+
+/* No terminales usados en la seccion gramatical. 
+
+   Primero se lista los no terminales que tienen un valor Object y despues
+   se lista los no terminales que tienen un entero. Un Object se refiere a que
+   no tienen tipo, pudiendo ser entero o String. */
+
+
+non terminal        BEGIN,DECLARE_BODY,MAIN_BODY,DATA_TYPE,ASSIG,DEC,
+                    EXP,STRINGVAL,BOOLEANVAL,COND,OP_ARIT,OP_LOG,OP_REL,BODY,NODE_STR,ARRAYSTRING_STR,
+                    FEATURES_STR,CTRL_STR,GROUP_STR,MAXMIN,ARRAYVAL,FEATURESVAL,IF_STR,IFAUX,LOOPAUX,SENTEN,SENTENCES,INPUT,
+                    OUTPUT,FUNCT,LOOP_STR,READFEAT,READS,PLN,GNGROUP,PGPH,GSIMILITUDE,GFEATURES,FEATURE_WORD,
+                    STRINGVALAUX,INTVAL,EXPNUM,DECLARE_BODY2,DATA_STR,T,F,ASSIG2;
+ 
+precedence left AND_OP,OR_OP;
+precedence left EQUAL_OP,GREATER_EQUAL_OP,LESS_EQUAL_OP,NOT_EQUAL_OP,LESS_OP,GREATER_OP;
+precedence left ADD_OP, SUBS_OP;
+precedence left CURLY_BR1,CURLY_BR2;
+precedence left BRACKET1,BRACKET2;
+precedence left PARENTH1,PARENTH2;
+
+start with BEGIN;
+
+
+BEGIN ::= DECLARE CURLY_BR1 DECLARE_BODY MAIN CURLY_BR1 MAIN_BODY CURLY_BR2;
+
+/*----------------------GRAMATICAS DECLARE ---------------------*/
+
+DECLARE_BODY ::=  CURLY_BR2 | DEC SEMICOLON_SIGN DECLARE_BODY | DATA_TYPE ASSIG SEMICOLON_SIGN DECLARE_BODY | ASSIG2 SEMICOLON_SIGN DECLARE_BODY ;
+
+DECLARE_BODY2 ::= DEC SEMICOLON_SIGN | ASSIG2 SEMICOLON_SIGN | DATA_TYPE ASSIG SEMICOLON_SIGN ;
+
+ASSIG ::= ID:miId ASSIG_OP EXP:v{:
+    RESULT = parser.generarSinTemp("ASIG", v.toString(), miId.toString());:} ;
+
+ASSIG2 ::= ID:miId ASSIG_OP EXP:v{:
+    RESULT = parser.generarSinTemp("ASIG", v.toString(), miId.toString());:} ;
+
+DATA_TYPE ::= STRING_WORD | INT_WORD | BOOLEAN_WORD ;
+
+EXP ::=  ID:i {:  
+          TSDatos identificador=FCompiler.ts.buscar(i+"");
+          parser.valorActual=identificador.valor.toString();
+          parser.valorActual=identificador.valor;
+          RESULT=identificador.valor; 
+:}
+| NUM:i {: RESULT=i; :} 
+| TRUE:i{:RESULT=i;:} 
+| FALSE:i {:RESULT=i;:} 
+| STRINGVAL:i{:RESULT=i;:}  
+| EXPNUM :i{:RESULT=i; :} 
+| PARENTH1 EXP:i PARENTH2  {:RESULT=i;:}
+| COND :i{:RESULT=i;:};
+
+STRINGVAL ::= STRINGVALAUX:s1 {:
+    if(s1!=null){
+        RESULT=s1.toString();
+    }
+:} 
+|  STRINGVALAUX:s1 ADD_OP STRINGVAL:s2 {:
+    if(s1!=null && s2 !=null){
+        String t= Generador.nuevaTemp();
+        FCompiler.codigointermedio += Generador.gc(Generador.ADD_OP,s1.toString(),s2.toString(),t);
+        RESULT=t;
+    }
+:};
+
+STRINGVALAUX::= STRING:f{:
+        String sincomillas= f.replace('"','-');
+        sincomillas=sincomillas.replaceAll("-","");
+        RESULT=sincomillas;
+        parser.valorActual= f;
+:} 
+| ID:i{:
+        
+          TSDatos identificador=FCompiler.ts.buscar(i+"");
+          parser.valorActual=identificador.valor.toString();
+          parser.valorActual=identificador.valor;
+          RESULT=identificador.valor;
+
+:} ;
+
+BOOLEANVAL ::= TRUE:i{:RESULT=i;:} 
+| FALSE:i{:RESULT=i;:} 
+| ID:i{:
+        
+          TSDatos identificador=FCompiler.ts.buscar(i+"");
+          parser.valorActual=identificador.valor.toString();
+          parser.valorActual=identificador.valor;
+          RESULT=identificador.valor;
+
+:};
+
+OP_ARIT ::=  ADD_OP | SUBS_OP;
+
+OP_LOG ::= AND_OP:i
+{:
+RESULT=i;
+//parser.op_log=1;
+:}
+
+| OR_OP:i
+{:
+RESULT=i;
+//parser.op_log=2;
+:};
+
+
+/*voy a ocupar una variable que cambie en cada caso, para saber que es*/
+OP_REL ::= EQUAL_OP{: 
+parser.op_relacional=1;
+ :} 
+| GREATER_EQUAL_OP{:
+parser.op_relacional=2;
+:} 
+| LESS_EQUAL_OP{:
+parser.op_relacional=3;
+:} 
+| NOT_EQUAL_OP{:
+parser.op_relacional=4;
+:} 
+| LESS_OP{:
+parser.op_relacional=5;
+:} 
+| GREATER_OP{:
+parser.op_relacional=6;
+:}
+;
+
+
+COND ::= F:i OP_LOG:t COND:f
+{:
+    if(t.equals("%%")){
+    parser.op_log=2;
+    }else{
+     parser.op_log=1;
+    }
+    RESULT = parser.generar("OP_LOG", i.toString(), f.toString());
+
+:} | F:i {:
+
+RESULT=i;
+
+:};
+
+F ::= BOOLEANVAL:i
+{: 
+
+RESULT=i; 
+
+:} | EXPNUM:i OP_REL EXPNUM:f 
+{:
+
+RESULT = parser.generar("OP_REL", i.toString(), f.toString());
+
+:} 
+| PARENTH1 COND:i PARENTH2
+{:
+
+RESULT=i; 
+
+:};
+
+
+EXPNUM ::= T:e1 {:
+        RESULT = e1;
+:} 
+| EXPNUM:e1 SUBS_OP:E  T:e2 {:
+    RESULT = parser.generar("SUBS_OPP", e1.toString(), e2.toString());  
+    :}
+
+| EXPNUM :e1 ADD_OP:E  T:e2 {:
+    RESULT = parser.generar("ADD_OP", e1.toString(), e2.toString());
+    :} 
+|error:e ADD_OP T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+".")); :}
+|EXPNUM error:e T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: Addition/Substraction operator expected. Line: "+(eleft+1)+", column: "+eright+"."));:} 
+|EXPNUM ADD_OP error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|error:e SUBS_OP T {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|EXPNUM SUBS_OP error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+|error:e {:parser.ManejadorDeErrores.add(new Error1("ES",eleft-1,eright,"Syntax Error: numeric expression expected. Line: "+(eleft+1)+", column: "+eright+"."));:}
+;
+
+
+
+
+T ::= INTVAL:i{: RESULT=i; :} 
+| PARENTH1 EXPNUM :i PARENTH2 {:
+        RESULT =i;
+    :};
+
+INTVAL ::= NUM:i {: RESULT=i; :}  | ID:i {:
+        
+          TSDatos identificador=FCompiler.ts.buscar(i+"");
+          parser.valorActual=identificador.valor.toString();
+          parser.valorActual=identificador.valor;
+          RESULT=identificador.valor;
+
+:} 
+|FUNCT:g {:
+    RESULT=g;
+ :};
+
+DEC ::= DATA_TYPE ID;
+
+/*-------------------ESTRUCTURAS DE DATOS-- ---------------------*/  
+
+DATA_STR::= NODE_STR | ARRAYSTRING_STR | FEATURES_STR | GROUP_STR;
+
+GROUP_STR ::= GROUP ID:val ASSIG_OP NEW GROUP PARENTH1 ID:j COMMA_SIGN MAXMIN:e COMMA_SIGN ID:d PARENTH2 SEMICOLON_SIGN{:
+if(val!=null){
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,"@"+j,null,"@"+val+".FEATURES");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,e+"",null,"@"+val+".MAXMIN");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,"@"+d,null,"@"+val+".JOBS");
+}
+:};
+
+NODE_STR ::= NODE ID:val ASSIG_OP NEW NODE PARENTH1 ID:j COMMA_SIGN STRINGVAL:e COMMA_SIGN STRINGVAL:d PARENTH2 SEMICOLON_SIGN{:
+if(val!=null){
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,"@"+j,null,"@"+val+".Features");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,e.toString(),null,"@"+val+".Name");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,d.toString(),null,"@"+val+".Job");
+}
+:} ;
+
+ARRAYSTRING_STR ::=  ARRAYSTRING ID:val ASSIG_OP NEW BRACKET1 ARRAYVAL:e BRACKET2 SEMICOLON_SIGN{:
+if(val!=null){
+String valores[]=e.toString().split(",");
+    for(int f=0; f<=valores.length-1;f++){
+       FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[f]+"",null,"@"+val+".["+f+"]"); 
+    }
+}
+:};
+
+ARRAYVAL ::= STRINGVAL:i{:RESULT=i;:} | STRINGVAL:e COMMA_SIGN ARRAYVAL:o{:
+RESULT=e+","+o;
+:} ;  
+
+FEATURES_STR ::= FEATURES ID:val ASSIG_OP NEW FEATURES PARENTH1 FEATURESVAL:e PARENTH2 SEMICOLON_SIGN{:
+if(val!=null){
+String valores[]=e.toString().split(",");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[0]+"",null,"@"+val+".Affability");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[1]+"",null,"@"+val+".Reasoning");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[2]+"",null,"@"+val+".Stability");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[3]+"",null,"@"+val+".Dominance");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[4]+"",null,"@"+val+".Liveliness");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[5]+"",null,"@"+val+".CareToStandards");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[6]+"",null,"@"+val+".Dare");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[7]+"",null,"@"+val+".Sensitivity");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[8]+"",null,"@"+val+".Surveillance");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[9]+"",null,"@"+val+".Abstraction");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[10]+"",null,"@"+val+".Privacy");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[11]+"",null,"@"+val+".apprehension");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[12]+"",null,"@"+val+".OpennessToChange");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[13]+"",null,"@"+val+".SelfSufficiency");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[14]+"",null,"@"+val+".Perfectionism");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[15]+"",null,"@"+val+".Tension");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[16]+"",null,"@"+val+".Sociability");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[17]+"",null,"@"+val+".Anxiety");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[18]+"",null,"@"+val+".Hardness");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[19]+"",null,"@"+val+".Independence");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,valores[20]+"",null,"@"+val+".SelfControl");
+            
+}
+RESULT=val;
+:};
+
+FEATURESVAL ::= EXPNUM:e1 COMMA_SIGN EXPNUM:e2 COMMA_SIGN EXPNUM:e3 COMMA_SIGN EXPNUM:e4 COMMA_SIGN EXPNUM:e5 COMMA_SIGN EXPNUM:e6 COMMA_SIGN EXPNUM:e7 COMMA_SIGN EXPNUM:e8 COMMA_SIGN EXPNUM:e9 COMMA_SIGN EXPNUM:e10 COMMA_SIGN EXPNUM:e11 COMMA_SIGN EXPNUM:e12 COMMA_SIGN EXPNUM:e13 COMMA_SIGN EXPNUM:e14 COMMA_SIGN EXPNUM:e15 COMMA_SIGN EXPNUM:e16 COMMA_SIGN EXPNUM:e17 COMMA_SIGN EXPNUM:e18 COMMA_SIGN EXPNUM:e19 COMMA_SIGN EXPNUM:e20 COMMA_SIGN EXPNUM:e21
+{:
+RESULT=e1+","+e2+","+e3+","+e4+","+e5+","+e6+","+e7+","+e8+","+e9+","+e10+","+e11+","+e12+","+e13+","+e14+","+e15+","+e16+","+e17+","+e18+","+e19+","+e20+","+e21;
+:};
+
+
+/*-----------------GRAMATICAS MAIN, UY QUE MIEDO -------------------*/
+MAIN_BODY ::= SENTEN |SENTEN MAIN_BODY; 
+
+
+BODY ::= CURLY_BR2 | SENTEN BODY;
+
+SENTENCES ::= SENTEN | SENTEN SENTENCES;
+
+SENTEN ::= INPUT | OUTPUT:i{:RESULT=i;:} | DATA_STR | DECLARE_BODY2 | CTRL_STR;
+
+
+MAXMIN ::= MAX:i{:RESULT=i;:}| MIN:i{:RESULT=i;:};
+
+/***ENTRADA*****/
+
+INPUT ::= READFEAT  | READS;
+
+READFEAT ::= READFEATVAL PARENTH1 ID:val PARENTH2 SEMICOLON_SIGN
+{:
+parser.tipoPrint=1;
+if(val!=null){String codigo = parser.generar("READ","", val.toString());}
+:};
+
+
+READS ::= READSTRING PARENTH1 ID:val PARENTH2 SEMICOLON_SIGN
+{:
+parser.tipoPrint=2;
+if(val!=null){String codigo = parser.generar("READ","", val.toString());}
+:};
+
+
+/***SALIDA****/
+
+OUTPUT ::= PLN  | GNGROUP | PGPH;
+
+PLN ::= PRINTLN PARENTH1 STRINGVAL:val PARENTH2 SEMICOLON_SIGN{:
+if(val!=null){String codigo = parser.generar("PRINTLN", "", val.toString());}
+
+:};
+
+GNGROUP ::= GENERATEGROUP PARENTH1 ID:val PARENTH2 SEMICOLON_SIGN {:
+if(val!=null){
+String codigo = Generador.gc(Generador.GNGROUP,null,null,val.toString());
+FCompiler.codigointermedio += codigo;
+//String codigo = parser.generar("GNGROUP", "", val.toString());
+}
+
+:};
+
+PGPH ::= PRINTGRAPH PARENTH1 ID:val PARENTH2 SEMICOLON_SIGN{:
+if(val!=null){
+String codigo = Generador.gc(Generador.PRINTGRAPH,null,null,val.toString());
+FCompiler.codigointermedio += codigo;
+//String codigo = parser.generar("PRINTGRAPH", "", val.toString());
+}
+
+:};
+
+
+/****FUNCIONES****/
+
+FUNCT ::= GSIMILITUDE:i {:RESULT =i;:} |  GFEATURES:i {:RESULT =i;:} ;
+
+/*SUMAR TODAS LAS CARACTERISTICAS DE CADA UNO PRIMERO Y DESPUES RESTAR EL RESULTADO.*/
+GSIMILITUDE ::= GETSIMILITUDE PARENTH1 ID:i COMMA_SIGN ID:j PARENTH2 {:
+int SumaFeaturesNodo1=FCompiler.ts.regresarSumaFeatures(i+"");
+String t= Generador.nuevaTemp();
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,SumaFeaturesNodo1+"",null,"@"+i+".AMOUNTFEATURES");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,"@"+i+".AMOUNTFEATURES",null,t);
+          
+int SumaFeaturesNodo2=FCompiler.ts.regresarSumaFeatures(j+"");
+String t2= Generador.nuevaTemp();
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,SumaFeaturesNodo2+"",null,"@"+j+".AMOUNTFEATURES");
+FCompiler.codigointermedio += Generador.gc(Generador.ASIG,"@"+j+".AMOUNTFEATURES",null,t2);
+
+RESULT = parser.generar("SUBS_OPP", t, t2);
+
+:};
+
+GFEATURES ::= GETFEATURES PARENTH1 ID:val POINT_SIGN FEATURE_WORD:e {:
+if(val!=null){
+        String t= Generador.nuevaTemp();
+        FCompiler.codigointermedio += Generador.gc(Generador.ASIG,"@"+val+"."+e,null,t);
+        RESULT= t;
+       }
+:}
+;
+
+
+FEATURE_WORD ::= 
+ABSTRACTION:i PARENTH2 {:RESULT=i;:} 
+| AFFABILITY:i  PARENTH2   {:RESULT=i;:}  
+| APPREHESION:i PARENTH2  {:RESULT=i;:}  
+| ANXIETY:i PARENTH2   {:RESULT=i;:}  
+| CARETOSTANDARDS:i PARENTH2   {:RESULT=i;:}  
+| DARE:i PARENTH2   {:RESULT=i;:}  
+| DOMINANCE:i PARENTH2   {:RESULT=i;:}  
+| HARDNESS:i PARENTH2  {:RESULT=i;:}  
+| INDEPENDENCE:i PARENTH2   {:RESULT=i;:}  
+| LIVELINESS:i PARENTH2  {:RESULT=i;:}  
+| OPENNESSTOCHANGE:i PARENTH2 {:RESULT=i;:}  
+| PERFECTIONISM:i PARENTH2  {:RESULT=i;:}  
+| PRIVACY:i PARENTH2   {:RESULT=i;:}  
+| REASONING:i PARENTH2  {:RESULT=i;:}  
+| SELFCONTROL:i PARENTH2 {:RESULT=i;:}  
+| SELFSUFFICIENCY:i PARENTH2 {:RESULT=i;:}  
+| SENSITIVITY:i PARENTH2 {:RESULT=i;:}  
+| SOCIABILITY:i PARENTH2 {:RESULT=i;:}  
+| STABILITY:i PARENTH2  {:RESULT=i;:}  
+| STRESS:i PARENTH2  {:RESULT=i;:}  
+| SURVEILLANCE:i PARENTH2 {:RESULT=i;:}  
+;
+
+
+/****CONTROL****/
+
+CTRL_STR ::=  LOOP_STR | IF_STR:i;
+
+/*IF_STR_O ::= IFAUX  PARENTH1 COND:lo PARENTH2  CURLY_BR1 BODY ;
+
+
+|*/
+
+IF_STR ::= IFAUX:ett PARENTH1 COND:lo PARENTH2 {:
+    String codigo = Generador.gc(Generador.IF,lo.toString(),"false",((EtiqRedir)(ett)).ini());
+    FCompiler.codigointermedio += codigo;
+:} CURLY_BR1 BODY {:
+    String codigo = Generador.gc(Generador.LABEL,null,null,((EtiqRedir)(ett)).ini());
+    FCompiler.codigointermedio += codigo;
+:} ELSE CURLY_BR1 {:
+    String codigo = Generador.gc(Generador.GOTO,null,null,((EtiqRedir)(ett)).fin());
+    int index = FCompiler.codigointermedio.lastIndexOf("L");
+    String x = FCompiler.codigointermedio;
+    FCompiler.codigointermedio= x.substring(0,index)+codigo+x.substring(index,x.length());
+:} BODY {:
+    String codigo = Generador.gc(Generador.LABEL,null,null,((EtiqRedir)(ett)).fin());
+    FCompiler.codigointermedio += codigo;
+:};
+
+IFAUX::= IF {:
+    String ini = Generador.nuevaEtiq();
+    String fin = Generador.nuevaEtiq();
+    RESULT = new EtiqRedir(ini,fin);
+:};
+
+LOOP_STR ::= LOOPAUX:et PARENTH1 {: 
+    String codigo = Generador.gc(Generador.LABEL, null, null, ((EtiqRedir)(et)).ini());
+    FCompiler.codigointermedio += codigo;
+:} COND:lo PARENTH2 CURLY_BR1 {:
+    String codigo = Generador.gc(Generador.IF, lo.toString(), "false", ((EtiqRedir)(et)).fin());
+    FCompiler.codigointermedio += codigo;
+:} BODY {:
+    String codigo = Generador.gc(Generador.GOTO, null, null, ((EtiqRedir)(et)).ini());
+    codigo += Generador.gc(Generador.LABEL, null, null, ((EtiqRedir)(et)).fin());
+    FCompiler.codigointermedio += codigo;
+:} ;
+
+LOOPAUX ::= LOOP {:
+    String ini = Generador.nuevaEtiq();
+    String fin = Generador.nuevaEtiq();
+    RESULT = new EtiqRedir(ini,fin);
+:};

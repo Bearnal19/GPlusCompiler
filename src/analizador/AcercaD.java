@@ -42,6 +42,7 @@ public class AcercaD extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/acerca.png"))); // NOI18N
+        jLabel1.setLabelFor(this);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -59,7 +60,7 @@ public class AcercaD extends javax.swing.JDialog {
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 630, 0);
+        jPanel1.setBounds(0, 0, 630, 600);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

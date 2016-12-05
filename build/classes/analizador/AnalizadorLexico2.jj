@@ -1,0 +1,9 @@
+PARSER_BEGIN(AnalizadorLexico1)
+class AnalizadorLexico1{
+   
+   public static void main(String[] args) throws ParseException
+   {
+    
+   }
+}
+PARSE_END(AnalizadorLexico1)
